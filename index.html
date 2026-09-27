@@ -60,7 +60,6 @@
             color: var(--text-sub);
         }
 
-        /* ハンバーガーボタン */
         .menu-btn {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -71,7 +70,6 @@
             cursor: pointer;
         }
 
-        /* スライドサイドメニュー */
         .overlay {
             display: none;
             position: fixed;
@@ -168,7 +166,6 @@
             color: var(--bg-color);
         }
 
-        /* モーダル (About用) */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -217,7 +214,6 @@
             width: 100%;
         }
 
-        /* 横スクロール対応タブバー */
         .tabs-wrapper {
             overflow-x: auto;
             white-space: nowrap;
@@ -386,7 +382,6 @@
 </head>
 <body>
 
-<!-- サイドメニュー ＆ オーバーレイ -->
 <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 <div class="drawer-menu" id="drawerMenu">
     <div class="drawer-header">
@@ -404,12 +399,11 @@
     </div>
 </div>
 
-<!-- About モーダル -->
 <div class="modal-overlay" id="aboutModal">
     <div class="modal-content">
         <div class="modal-header" id="modal-title">About AeroUnitConverter</div>
         <div class="modal-body" id="modal-body">
-            AeroUnitConverter is a lightweight, offline-ready web application designed for aviation mechanics and engineering professionals. Features include unit conversion, fraction/decimal calculations for damage limit checks, and gauge reading practice.
+            AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion and gauge reading practice.
         </div>
         <button class="modal-close-btn" onclick="closeAbout()">OK</button>
     </div>
@@ -695,7 +689,6 @@
 
     </div>
 
-    <!-- 免責事項フッター -->
     <footer>
         <p id="i18n-disclaimer">
             <strong>Disclaimer:</strong> This tool is provided for reference and educational purposes only. Always verify calculations against official manuals or documentation. The developer assumes no responsibility for any damages or losses resulting from the use of this tool.
@@ -731,7 +724,7 @@
             resDrum: "55-gal Drum",
             menuAbout: "About This Site",
             aboutTitle: "About AeroUnitConverter",
-            aboutBody: "AeroUnitConverter is a lightweight, offline-ready web application designed for aviation mechanics and engineering professionals. Features include unit conversion, fraction/decimal calculations for damage limit checks, and gauge reading practice.",
+            aboutBody: "AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion and gauge reading practice.",
             disclaimer: "<strong>Disclaimer:</strong> This tool is provided for reference and educational purposes only. Always verify calculations against official manuals or documentation. The developer assumes no responsibility for any damages or losses resulting from the use of this tool."
         },
         jp: {
@@ -758,12 +751,11 @@
             resDrum: "55ガロンドラム缶",
             menuAbout: "このサイトについて",
             aboutTitle: "AeroUnitConverter について",
-            aboutBody: "AeroUnitConverter は、航空ファンやエンジニア向けに開発された軽量・オフライン対応の単位換算ウェブツールです。各種単位換算をはじめ、Dent/Scratch判定用の分数インチ誤差計算や、実務で役立つトレーニング機能を備えています。",
+            aboutBody: "AeroUnitConverter は、航空ファンやエンジニア向けに開発された軽量・オフライン対応の単位換算ウェブツールです。各種単位換算をはじめ、実務で役立つトレーニング機能を備えています。",
             disclaimer: "<strong>免責事項:</strong> 本ツールは参考および教育目的で提供されています。実務での使用にあたっては、必ず公式のマニュアルや規程をご確認ください。本ツールの計算結果によって生じた事故や損害について、開発者は一切の責任を負いません。"
         }
     };
 
-    /* メニュー開閉 */
     function openMenu() {
         document.getElementById('drawerMenu').classList.add('open');
         document.getElementById('overlay').style.display = 'block';
@@ -774,7 +766,6 @@
         document.getElementById('overlay').style.display = 'none';
     }
 
-    /* About モーダル開閉 */
     function openAbout() {
         closeMenu();
         document.getElementById('aboutModal').style.display = 'flex';
@@ -875,7 +866,6 @@
         return `${fracStr} (${signMm}${diffMm.toFixed(3)}mm / ${signIn}${diffInch.toFixed(4)}in)`;
     }
 
-    // --- 1. Length ---
     function calcLength() {
         const str = document.getElementById('lenInput').value.trim();
         const unit = document.getElementById('lenUnit').value;
@@ -937,7 +927,6 @@
         calcLength();
     }
 
-    // --- 2. Area ---
     function calcArea() {
         const val = parseFloat(document.getElementById('areaInput').value);
         const unit = document.getElementById('areaUnit').value;
@@ -958,7 +947,6 @@
         document.getElementById('area-sqm').textContent = (sqmm / 1000000).toFixed(6) + ' m²';
     }
 
-    // --- 3. Distance ---
     function calcDistance() {
         const val = parseFloat(document.getElementById('distInput').value);
         const unit = document.getElementById('distUnit').value;
@@ -979,7 +967,6 @@
         document.getElementById('dist-ft').textContent = (m / 0.3048).toFixed(2) + ' ft';
     }
 
-    // --- 4. Torque ---
     function calcTorque() {
         const val = parseFloat(document.getElementById('torqInput').value);
         const unit = document.getElementById('torqUnit').value;
@@ -998,7 +985,6 @@
         document.getElementById('torq-kgfcm').textContent = (nm / 0.0980665).toFixed(2) + ' kgf・cm';
     }
 
-    // --- 5. Pressure ---
     function calcPressure() {
         const val = parseFloat(document.getElementById('presInput').value);
         const unit = document.getElementById('presUnit').value;
@@ -1017,7 +1003,6 @@
         document.getElementById('pres-hpa').textContent = (psi / 0.0145037738).toFixed(1) + ' hPa';
     }
 
-    // --- 6. Volume ---
     function calcVolume() {
         const val = parseFloat(document.getElementById('volInput').value);
         const unit = document.getElementById('volUnit').value;
@@ -1042,7 +1027,6 @@
         document.getElementById('vol-ml').textContent = (l * 1000).toFixed(1) + ' mL';
     }
 
-    // --- 7. Weight ---
     function calcWeight() {
         const val = parseFloat(document.getElementById('wtInput').value);
         const unit = document.getElementById('wtUnit').value;
@@ -1057,7 +1041,6 @@
         document.getElementById('wt-kg').textContent = kg.toFixed(2) + ' kg';
     }
 
-    // --- 8. Temperature ---
     function calcTemp() {
         const val = parseFloat(document.getElementById('tempInput').value);
         const unit = document.getElementById('tempUnit').value;
@@ -1077,7 +1060,6 @@
         document.getElementById('temp-k').textContent = k.toFixed(2) + ' K';
     }
 
-    // --- 9. Speed ---
     function calcSpeed() {
         const val = parseFloat(document.getElementById('spdInput').value);
         const unit = document.getElementById('spdUnit').value;
@@ -1096,7 +1078,6 @@
         document.getElementById('spd-mph').textContent = (kmh / 1.609344).toFixed(2) + ' mph';
     }
 
-    // --- 10. SI Prefix ---
     function calcSI() {
         const val = parseFloat(document.getElementById('siInput').value);
         const exp = parseInt(document.getElementById('siUnit').value);
@@ -1123,7 +1104,6 @@
         document.getElementById('si-n').textContent = formatNum(baseVal / 1e-9);
     }
 
-    // 初期化実行
     calcLength();
     calcArea();
     calcDistance();
