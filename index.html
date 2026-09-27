@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1Z0REVFHH"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1Z0REVFHH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  gtag('config', 'G-Z1Z0REVFHH');
-</script>
+      gtag('config', 'G-Z1Z0REVFHH');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AeroUnitConverter - Aviation & Engineering Unit Converter</title>
@@ -60,29 +60,161 @@
             color: var(--text-sub);
         }
 
-        /* 言語切り替えボタン */
-        .lang-switch {
-            display: flex;
+        /* ハンバーガーボタン */
+        .menu-btn {
             background: var(--card-bg);
             border: 1px solid var(--border);
+            color: var(--text-main);
+            font-size: 1.2rem;
+            padding: 6px 10px;
             border-radius: 8px;
-            padding: 2px;
+            cursor: pointer;
         }
 
-        .lang-btn {
+        /* スライドサイドメニュー */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 90;
+        }
+
+        .drawer-menu {
+            position: fixed;
+            top: 0; right: -280px;
+            width: 250px; height: 100%;
+            background: var(--card-bg);
+            border-left: 1px solid var(--border);
+            box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+            z-index: 100;
+            transition: right 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .drawer-menu.open {
+            right: 0;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .drawer-close {
             background: none;
             border: none;
             color: var(--text-sub);
-            padding: 4px 8px;
-            font-size: 0.75rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .drawer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .drawer-link {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 8px;
+            background: var(--input-bg);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .drawer-link:active {
+            border-color: var(--accent);
+        }
+
+        .lang-switch {
+            display: flex;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2px;
+            margin-top: auto;
+        }
+
+        .lang-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            padding: 6px 0;
+            font-size: 0.8rem;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
+            text-align: center;
         }
 
         .lang-btn.active {
             background: var(--accent);
             color: var(--bg-color);
+        }
+
+        /* モーダル (About用) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 110;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .modal-body {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin-bottom: 16px;
+        }
+
+        .modal-close-btn {
+            background: var(--btn-bg);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
         }
 
         /* 横スクロール対応タブバー */
@@ -254,16 +386,42 @@
 </head>
 <body>
 
+<!-- サイドメニュー ＆ オーバーレイ -->
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<div class="drawer-menu" id="drawerMenu">
+    <div class="drawer-header">
+        <strong style="color: var(--accent);">Navigation</strong>
+        <button class="drawer-close" onclick="closeMenu()">✕</button>
+    </div>
+    <div class="drawer-links">
+        <a href="index.html" class="drawer-link" style="border: 1px solid var(--accent);">✈️ AeroUnitConverter</a>
+        <a href="trainer.html" class="drawer-link">🎓 Training Mode</a>
+        <div class="drawer-link" onclick="openAbout()">ℹ️ <span id="menu-about">About This Site</span></div>
+    </div>
+    <div class="lang-switch">
+        <button class="lang-btn active" id="btn-en" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" id="btn-jp" onclick="setLanguage('jp')">JP</button>
+    </div>
+</div>
+
+<!-- About モーダル -->
+<div class="modal-overlay" id="aboutModal">
+    <div class="modal-content">
+        <div class="modal-header" id="modal-title">About AeroUnitConverter</div>
+        <div class="modal-body" id="modal-body">
+            AeroUnitConverter is a lightweight, offline-ready web application designed for aviation mechanics and engineering professionals. Features include unit conversion, fraction/decimal calculations for damage limit checks, and gauge reading practice.
+        </div>
+        <button class="modal-close-btn" onclick="closeAbout()">OK</button>
+    </div>
+</div>
+
 <div class="container">
     <header>
         <div class="header-title">
             <h1>✈️ AeroUnitConverter</h1>
             <div class="subtitle" id="i18n-subtitle">Aviation & Engineering Unit Converter</div>
         </div>
-        <div class="lang-switch">
-            <button class="lang-btn active" id="btn-en" onclick="setLanguage('en')">EN</button>
-            <button class="lang-btn" id="btn-jp" onclick="setLanguage('jp')">JP</button>
-        </div>
+        <button class="menu-btn" onclick="openMenu()">☰</button>
     </header>
 
     <div class="tabs-wrapper">
@@ -571,6 +729,9 @@
             resFrac64: "Nearest 1/64 Fraction",
             resFrac128: "Nearest 1/128 Fraction",
             resDrum: "55-gal Drum",
+            menuAbout: "About This Site",
+            aboutTitle: "About AeroUnitConverter",
+            aboutBody: "AeroUnitConverter is a lightweight, offline-ready web application designed for aviation mechanics and engineering professionals. Features include unit conversion, fraction/decimal calculations for damage limit checks, and gauge reading practice.",
             disclaimer: "<strong>Disclaimer:</strong> This tool is provided for reference and educational purposes only. Always verify calculations against official manuals or documentation. The developer assumes no responsibility for any damages or losses resulting from the use of this tool."
         },
         jp: {
@@ -595,9 +756,33 @@
             resFrac64: "最寄り 1/64 帯分数",
             resFrac128: "最寄り 1/128 帯分数",
             resDrum: "55ガロンドラム缶",
+            menuAbout: "このサイトについて",
+            aboutTitle: "AeroUnitConverter について",
+            aboutBody: "AeroUnitConverter は、航空整備士やエンジニア向けに開発された軽量・オフライン対応の単位換算ウェブツールです。各種単位換算をはじめ、Dent/Scratch判定用の分数インチ誤差計算や、実務で役立つトレーニング機能を備えています。",
             disclaimer: "<strong>免責事項:</strong> 本ツールは参考および教育目的で提供されています。実務での使用にあたっては、必ず公式のマニュアルや規程をご確認ください。本ツールの計算結果によって生じた事故や損害について、開発者は一切の責任を負いません。"
         }
     };
+
+    /* メニュー開閉 */
+    function openMenu() {
+        document.getElementById('drawerMenu').classList.add('open');
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeMenu() {
+        document.getElementById('drawerMenu').classList.remove('open');
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    /* About モーダル開閉 */
+    function openAbout() {
+        closeMenu();
+        document.getElementById('aboutModal').style.display = 'flex';
+    }
+
+    function closeAbout() {
+        document.getElementById('aboutModal').style.display = 'none';
+    }
 
     function setLanguage(lang) {
         currentLang = lang;
@@ -636,6 +821,10 @@
         document.getElementById('lbl-res-frac64').textContent = t.resFrac64;
         document.getElementById('lbl-res-frac128').textContent = t.resFrac128;
         document.getElementById('lbl-res-drum').textContent = t.resDrum;
+
+        document.getElementById('menu-about').textContent = t.menuAbout;
+        document.getElementById('modal-title').textContent = t.aboutTitle;
+        document.getElementById('modal-body').textContent = t.aboutBody;
 
         document.getElementById('i18n-disclaimer').innerHTML = t.disclaimer;
     }
