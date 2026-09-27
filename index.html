@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroUnitConverter - 航空単位換算ツール</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f1f5f9;
+            color: #0f172a;
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 440px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            font-size: 1.3rem;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 4px;
+            color: #0f172a;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            color: #475569;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        input[type="text"]:focus {
+            border-color: #2563eb;
+            outline: none;
+        }
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .btn-fraction {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 0;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+        .btn-fraction:active {
+            background: #1d4ed8;
+        }
+        .result-box {
+            background: #0f172a;
+            color: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #334155;
+        }
+        .result-row:last-child {
+            border-bottom: none;
+        }
+        .result-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        .result-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✈️ AeroUnitConverter</h1>
+        <div class="subtitle">航空整備士のための即座単位換算ツール</div>
+        
+        <div class="card">
+            <label for="inchInput">インチ入力（分数または小数）</label>
+            <input type="text" id="inchInput" placeholder="例: 1/16" value="1/16">
+            
+            <label>ワンタップ入力</label>
+            <div class="btn-grid">
+                <button class="btn-fraction" onclick="setInputValue('1/64')">1/64</button>
+                <button class="btn-fraction" onclick="setInputValue('1/32')">1/32</button>
+                <button class="btn-fraction" onclick="setInputValue('3/32')">3/32</button>
+                <button class="btn-fraction" onclick="setInputValue('1/16')">1/16</button>
+                <button class="btn-fraction" onclick="setInputValue('1/8')">1/8</button>
+                <button class="btn-fraction" onclick="setInputValue('1/4')">1/4</button>
+                <button class="btn-fraction" onclick="setInputValue('1/2')">1/2</button>
+                <button class="btn-fraction" onclick="setInputValue('3/4')">3/4</button>
+            </div>
+        </div>
+
+        <div class="result-box">
+            <div class="result-row">
+                <span class="result-label">ミリメートル (mm)</span>
+                <span class="result-value" id="resMm">0</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">センチメートル (cm)</span>
+                <span class="result-value" id="resCm">0</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">小数インチ (in)</span>
+                <span class="result-value" id="resDec">0</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const inputEl = document.getElementById('inchInput');
+        const resMmEl = document.getElementById('resMm');
+        const resCmEl = document.getElementById('resCm');
+        const resDecEl = document.getElementById('resDec');
+
+        function calculate() {
+            const valStr = inputEl.value.trim();
+            let inchVal = 0;
+
+            if (!valStr) {
+                resMmEl.textContent = '0 mm';
+                resCmEl.textContent = '0 cm';
+                resDecEl.textContent = '0 in';
+                return;
+            }
+
+            if (valStr.includes('/')) {
+                const parts = valStr.split('/');
+                if (parts.length === 2) {
+                    const num = parseFloat(parts[0]);
+                    const den = parseFloat(parts[1]);
+                    if (!isNaN(num) && !isNaN(den) && den !== 0) {
+                        inchVal = num / den;
+                    }
+                }
+            } else {
+                inchVal = parseFloat(valStr);
+            }
+
+            if (isNaN(inchVal)) {
+                resMmEl.textContent = 'エラー';
+                resCmEl.textContent = 'エラー';
+                resDecEl.textContent = 'エラー';
+                return;
+            }
+
+            const mm = inchVal * 25.4;
+            const cm = mm / 10;
+
+            resMmEl.textContent = Number(mm.toFixed(4)) + ' mm';
+            resCmEl.textContent = Number(cm.toFixed(4)) + ' cm';
+            resDecEl.textContent = Number(inchVal.toFixed(4)) + ' in';
+        }
+
+        function setInputValue(val) {
+            inputEl.value = val;
+            calculate();
+        }
+
+        inputEl.addEventListener('input', calculate);
+        calculate();
+    </script>
+</body>
+</html>
