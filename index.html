@@ -1,204 +1,835 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AeroUnitConverter - 航空単位換算ツール</title>
+    <title>AeroUnitConverter - Aviation & Engineering Unit Converter</title>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --input-bg: #334155;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --accent: #38bdf8;
+            --accent-green: #4ade80;
+            --btn-bg: #0284c7;
+            --btn-active: #0369a1;
+            --border: #475569;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f1f5f9;
-            color: #0f172a;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             margin: 0;
-            padding: 16px;
+            padding: 12px;
             display: flex;
             justify-content: center;
         }
+
         .container {
             width: 100%;
-            max-width: 440px;
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            max-width: 480px;
         }
-        h1 {
-            font-size: 1.3rem;
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 4px;
-            color: #0f172a;
-        }
-        .subtitle {
-            text-align: center;
-            font-size: 0.8rem;
-            color: #64748b;
-            margin-bottom: 20px;
-        }
-        .card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-            color: #475569;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            border: 2px solid #cbd5e1;
-            border-radius: 8px;
-            box-sizing: border-box;
-            text-align: center;
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 12px;
         }
-        input[type="text"]:focus {
-            border-color: #2563eb;
-            outline: none;
+
+        .header-title h1 {
+            font-size: 1.3rem;
+            margin: 0;
+            color: var(--accent);
         }
-        .btn-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+
+        .header-title .subtitle {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        /* 言語切り替えボタン */
+        .lang-switch {
+            display: flex;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2px;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .lang-btn.active {
+            background: var(--accent);
+            color: var(--bg-color);
+        }
+
+        /* 横スクロール対応タブバー */
+        .tabs-wrapper {
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 16px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tabs-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tabs {
+            display: inline-flex;
+            gap: 4px;
+            background: var(--card-bg);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: var(--bg-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .input-row {
+            display: flex;
             gap: 8px;
         }
-        .btn-fraction {
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 0;
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
             font-weight: bold;
+            background: var(--input-bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: #ffffff;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent);
+        }
+
+        select {
             font-size: 0.95rem;
             cursor: pointer;
         }
-        .btn-fraction:active {
-            background: #1d4ed8;
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 8px;
         }
-        .result-box {
-            background: #0f172a;
-            color: #ffffff;
+
+        .btn-btn {
+            background: var(--btn-bg);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 0;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .btn-btn:active {
+            background: var(--btn-active);
+        }
+
+        .results {
+            margin-top: 16px;
+            background: #090d16;
             border-radius: 12px;
-            padding: 16px;
+            padding: 12px 16px;
+            border: 1px solid #1e293b;
         }
+
         .result-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 10px 0;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid #1e293b;
+            gap: 8px;
         }
+
         .result-row:last-child {
             border-bottom: none;
         }
+
         .result-label {
-            color: #94a3b8;
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .result-val {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--accent);
+            text-align: right;
+            word-break: break-all;
+        }
+
+        .result-val.highlight {
+            color: var(--accent-green);
             font-size: 0.9rem;
         }
-        .result-value {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #38bdf8;
+
+        footer {
+            margin-top: 24px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 0.72rem;
+            color: #64748b;
+            line-height: 1.4;
+            padding: 0 8px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>✈️ AeroUnitConverter</h1>
-        <div class="subtitle">航空整備士のための即座単位換算ツール</div>
-        
-        <div class="card">
-            <label for="inchInput">インチ入力（分数または小数）</label>
-            <input type="text" id="inchInput" placeholder="例: 1/16" value="1/16">
-            
-            <label>ワンタップ入力</label>
-            <div class="btn-grid">
-                <button class="btn-fraction" onclick="setInputValue('1/64')">1/64</button>
-                <button class="btn-fraction" onclick="setInputValue('1/32')">1/32</button>
-                <button class="btn-fraction" onclick="setInputValue('3/32')">3/32</button>
-                <button class="btn-fraction" onclick="setInputValue('1/16')">1/16</button>
-                <button class="btn-fraction" onclick="setInputValue('1/8')">1/8</button>
-                <button class="btn-fraction" onclick="setInputValue('1/4')">1/4</button>
-                <button class="btn-fraction" onclick="setInputValue('1/2')">1/2</button>
-                <button class="btn-fraction" onclick="setInputValue('3/4')">3/4</button>
-            </div>
-        </div>
 
-        <div class="result-box">
-            <div class="result-row">
-                <span class="result-label">ミリメートル (mm)</span>
-                <span class="result-value" id="resMm">0</span>
-            </div>
-            <div class="result-row">
-                <span class="result-label">センチメートル (cm)</span>
-                <span class="result-value" id="resCm">0</span>
-            </div>
-            <div class="result-row">
-                <span class="result-label">小数インチ (in)</span>
-                <span class="result-value" id="resDec">0</span>
-            </div>
+<div class="container">
+    <header>
+        <div class="header-title">
+            <h1>✈️ AeroUnitConverter</h1>
+            <div class="subtitle" id="i18n-subtitle">Aviation & Engineering Unit Converter</div>
+        </div>
+        <div class="lang-switch">
+            <button class="lang-btn active" id="btn-en" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" id="btn-jp" onclick="setLanguage('jp')">JP</button>
+        </div>
+    </header>
+
+    <div class="tabs-wrapper">
+        <div class="tabs">
+            <button class="tab-btn active" id="tab-btn-length" onclick="switchTab(event, 'length')">Length</button>
+            <button class="tab-btn" id="tab-btn-distance" onclick="switchTab(event, 'distance')">Distance</button>
+            <button class="tab-btn" id="tab-btn-torque" onclick="switchTab(event, 'torque')">Torque</button>
+            <button class="tab-btn" id="tab-btn-pressure" onclick="switchTab(event, 'pressure')">Pressure</button>
+            <button class="tab-btn" id="tab-btn-volume" onclick="switchTab(event, 'volume')">Volume</button>
+            <button class="tab-btn" id="tab-btn-weight" onclick="switchTab(event, 'weight')">Weight</button>
+            <button class="tab-btn" id="tab-btn-speed" onclick="switchTab(event, 'speed')">Speed</button>
+            <button class="tab-btn" id="tab-btn-si" onclick="switchTab(event, 'si')">SI Prefix</button>
         </div>
     </div>
 
-    <script>
-        const inputEl = document.getElementById('inchInput');
-        const resMmEl = document.getElementById('resMm');
-        const resCmEl = document.getElementById('resCm');
-        const resDecEl = document.getElementById('resDec');
+    <div class="card">
+        <!-- 1. Length -->
+        <div id="tab-length" class="tab-content active">
+            <div class="input-group">
+                <label id="lbl-input-length">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="text" id="lenInput" placeholder="e.g. 1/16 or 2.5" value="1/16" oninput="calcLength()">
+                    <select id="lenUnit" style="width: 120px;" onchange="calcLength()">
+                        <option value="in">in</option>
+                        <option value="mm">mm</option>
+                        <option value="cm">cm</option>
+                        <option value="ft">ft</option>
+                    </select>
+                </div>
+            </div>
+            
+            <label id="lbl-quick-length">Quick Inch Input</label>
+            <div class="btn-grid">
+                <button class="btn-btn" onclick="setLen('1/64')">1/64</button>
+                <button class="btn-btn" onclick="setLen('1/32')">1/32</button>
+                <button class="btn-btn" onclick="setLen('3/32')">3/32</button>
+                <button class="btn-btn" onclick="setLen('1/16')">1/16</button>
+                <button class="btn-btn" onclick="setLen('1/8')">1/8</button>
+                <button class="btn-btn" onclick="setLen('1/4')">1/4</button>
+                <button class="btn-btn" onclick="setLen('1/2')">1/2</button>
+                <button class="btn-btn" onclick="setLen('3/4')">3/4</button>
+            </div>
 
-        function calculate() {
-            const valStr = inputEl.value.trim();
-            let inchVal = 0;
+            <div class="results">
+                <div class="result-row"><span class="result-label" id="lbl-res-mm">Millimeter (mm)</span><span class="result-val" id="len-mm">0</span></div>
+                <div class="result-row"><span class="result-label" id="lbl-res-cm">Centimeter (cm)</span><span class="result-val" id="len-cm">0</span></div>
+                <div class="result-row"><span class="result-label" id="lbl-res-ft">Feet (ft)</span><span class="result-val" id="len-ft">0</span></div>
+                <div class="result-row"><span class="result-label" id="lbl-res-dec">Decimal Inch (in)</span><span class="result-val" id="len-dec">0</span></div>
+                <div class="result-row"><span class="result-label" id="lbl-res-frac64">Nearest 1/64 Fraction</span><span class="result-val highlight" id="len-frac64">-</span></div>
+                <div class="result-row"><span class="result-label" id="lbl-res-frac128">Nearest 1/128 Fraction</span><span class="result-val highlight" id="len-frac128">-</span></div>
+            </div>
+        </div>
 
-            if (!valStr) {
-                resMmEl.textContent = '0 mm';
-                resCmEl.textContent = '0 cm';
-                resDecEl.textContent = '0 in';
-                return;
-            }
+        <!-- 2. Distance -->
+        <div id="tab-distance" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-dist">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="distInput" value="10" oninput="calcDistance()">
+                    <select id="distUnit" onchange="calcDistance()">
+                        <option value="NM">NM (Nautical Mile)</option>
+                        <option value="km">km</option>
+                        <option value="m">m</option>
+                        <option value="yd">yd (Yard)</option>
+                        <option value="ft">ft (Feet)</option>
+                    </select>
+                </div>
+            </div>
 
-            if (valStr.includes('/')) {
-                const parts = valStr.split('/');
-                if (parts.length === 2) {
-                    const num = parseFloat(parts[0]);
-                    const den = parseFloat(parts[1]);
-                    if (!isNaN(num) && !isNaN(den) && den !== 0) {
-                        inchVal = num / den;
-                    }
+            <div class="results">
+                <div class="result-row"><span class="result-label">NM (Nautical Mile)</span><span class="result-val" id="dist-nm">0</span></div>
+                <div class="result-row"><span class="result-label">km (Kilometer)</span><span class="result-val" id="dist-km">0</span></div>
+                <div class="result-row"><span class="result-label">m (Meter)</span><span class="result-val" id="dist-m">0</span></div>
+                <div class="result-row"><span class="result-label">yd (Yard)</span><span class="result-val" id="dist-yd">0</span></div>
+                <div class="result-row"><span class="result-label">ft (Feet)</span><span class="result-val" id="dist-ft">0</span></div>
+            </div>
+        </div>
+
+        <!-- 3. Torque -->
+        <div id="tab-torque" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-torq">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="torqInput" value="100" oninput="calcTorque()">
+                    <select id="torqUnit" onchange="calcTorque()">
+                        <option value="in-lb">in-lb</option>
+                        <option value="ft-lb">ft-lb</option>
+                        <option value="Nm">N・m</option>
+                        <option value="kgfcm">kgf・cm</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">in-lb (Inch Pound)</span><span class="result-val" id="torq-inlb">0</span></div>
+                <div class="result-row"><span class="result-label">ft-lb (Foot Pound)</span><span class="result-val" id="torq-ftlb">0</span></div>
+                <div class="result-row"><span class="result-label">N・m (Newton Meter)</span><span class="result-val" id="torq-nm">0</span></div>
+                <div class="result-row"><span class="result-label">kgf・cm (Kilogram-force cm)</span><span class="result-val" id="torq-kgfcm">0</span></div>
+            </div>
+        </div>
+
+        <!-- 4. Pressure -->
+        <div id="tab-pressure" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-pres">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="presInput" value="50" oninput="calcPressure()">
+                    <select id="presUnit" onchange="calcPressure()">
+                        <option value="psi">PSI</option>
+                        <option value="bar">bar</option>
+                        <option value="inhg">inHg</option>
+                        <option value="hpa">hPa / mbar</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">PSI (Pounds per sq inch)</span><span class="result-val" id="pres-psi">0</span></div>
+                <div class="result-row"><span class="result-label">bar</span><span class="result-val" id="pres-bar">0</span></div>
+                <div class="result-row"><span class="result-label">inHg (Inches of mercury)</span><span class="result-val" id="pres-inhg">0</span></div>
+                <div class="result-row"><span class="result-label">hPa / mbar (Hectopascal)</span><span class="result-val" id="pres-hpa">0</span></div>
+            </div>
+        </div>
+
+        <!-- 5. Volume -->
+        <div id="tab-volume" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-vol">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="volInput" value="1" oninput="calcVolume()">
+                    <select id="volUnit" onchange="calcVolume()">
+                        <option value="qt">Quart (QT)</option>
+                        <option value="pt">Pint (PT)</option>
+                        <option value="gal">US Gallon</option>
+                        <option value="l">Liter (L)</option>
+                        <option value="ml">mL</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">Quart (QT)</span><span class="result-val" id="vol-qt">0</span></div>
+                <div class="result-row"><span class="result-label">Pint (PT)</span><span class="result-val" id="vol-pt">0</span></div>
+                <div class="result-row"><span class="result-label">US Gallon (Gal)</span><span class="result-val" id="vol-gal">0</span></div>
+                <div class="result-row"><span class="result-label">Liter (L)</span><span class="result-val" id="vol-l">0</span></div>
+                <div class="result-row"><span class="result-label">Milliliter (mL)</span><span class="result-val" id="vol-ml">0</span></div>
+            </div>
+        </div>
+
+        <!-- 6. Weight -->
+        <div id="tab-weight" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-wt">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="wtInput" value="100" oninput="calcWeight()">
+                    <select id="wtUnit" onchange="calcWeight()">
+                        <option value="lbs">lbs (Pounds)</option>
+                        <option value="kg">kg (Kilograms)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">lbs (Pounds)</span><span class="result-val" id="wt-lbs">0</span></div>
+                <div class="result-row"><span class="result-label">kg (Kilograms)</span><span class="result-val" id="wt-kg">0</span></div>
+            </div>
+        </div>
+
+        <!-- 7. Speed -->
+        <div id="tab-speed" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-spd">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="spdInput" value="10" oninput="calcSpeed()">
+                    <select id="spdUnit" onchange="calcSpeed()">
+                        <option value="kt">kt (Knot)</option>
+                        <option value="ms">m/s</option>
+                        <option value="kmh">km/h</option>
+                        <option value="mph">mph</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">kt (Knot)</span><span class="result-val" id="spd-kt">0</span></div>
+                <div class="result-row"><span class="result-label">m/s (Meter per second)</span><span class="result-val" id="spd-ms">0</span></div>
+                <div class="result-row"><span class="result-label">km/h (Kilometer per hour)</span><span class="result-val" id="spd-kmh">0</span></div>
+                <div class="result-row"><span class="result-label">mph (Miles per hour)</span><span class="result-val" id="spd-mph">0</span></div>
+            </div>
+        </div>
+
+        <!-- 8. SI Prefix -->
+        <div id="tab-si" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-si">Enter Value & Base Prefix</label>
+                <div class="input-row">
+                    <input type="number" id="siInput" value="1" oninput="calcSI()">
+                    <select id="siUnit" onchange="calcSI()">
+                        <option value="9">G (Giga / 10⁹)</option>
+                        <option value="6">M (Mega / 10⁶)</option>
+                        <option value="3">k (Kilo / 10³)</option>
+                        <option value="0" selected>base (Base / 10⁰)</option>
+                        <option value="-2">c (Centi / 10⁻²)</option>
+                        <option value="-3">m (Milli / 10⁻³)</option>
+                        <option value="-6">μ (Micro / 10⁻⁶)</option>
+                        <option value="-9">n (Nano / 10⁻⁹)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">Giga (G) [10⁹]</span><span class="result-val" id="si-G">0</span></div>
+                <div class="result-row"><span class="result-label">Mega (M) [10⁶]</span><span class="result-val" id="si-M">0</span></div>
+                <div class="result-row"><span class="result-label">Kilo (k) [10³]</span><span class="result-val" id="si-k">0</span></div>
+                <div class="result-row"><span class="result-label">Base [10⁰]</span><span class="result-val" id="si-base">0</span></div>
+                <div class="result-row"><span class="result-label">Centi (c) [10⁻²]</span><span class="result-val" id="si-c">0</span></div>
+                <div class="result-row"><span class="result-label">Milli (m) [10⁻³]</span><span class="result-val" id="si-m">0</span></div>
+                <div class="result-row"><span class="result-label">Micro (μ) [10⁻⁶]</span><span class="result-val" id="si-u">0</span></div>
+                <div class="result-row"><span class="result-label">Nano (n) [10⁻⁹]</span><span class="result-val" id="si-n">0</span></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 免責事項フッター -->
+    <footer>
+        <p id="i18n-disclaimer">
+            <strong>Disclaimer:</strong> This tool is provided for reference and educational purposes only. Always verify calculations against official manuals or documentation. The developer assumes no responsibility for any damages or losses resulting from the use of this tool.
+        </p>
+    </footer>
+</div>
+
+<script>
+    let currentLang = 'en';
+
+    const i18n = {
+        en: {
+            subtitle: "Aviation & Engineering Unit Converter",
+            tabLength: "Length",
+            tabDistance: "Distance",
+            tabTorque: "Torque",
+            tabPressure: "Pressure",
+            tabVolume: "Volume",
+            tabWeight: "Weight",
+            tabSpeed: "Speed",
+            tabSI: "SI Prefix",
+            inputValUnit: "Enter Value & Unit",
+            inputValPrefix: "Enter Value & Base Prefix",
+            quickInch: "Quick Inch Input",
+            resMm: "Millimeter (mm)",
+            resCm: "Centimeter (cm)",
+            resFt: "Feet (ft)",
+            resDec: "Decimal Inch (in)",
+            resFrac64: "Nearest 1/64 Fraction",
+            resFrac128: "Nearest 1/128 Fraction",
+            disclaimer: "<strong>Disclaimer:</strong> This tool is provided for reference and educational purposes only. Always verify calculations against official manuals or documentation. The developer assumes no responsibility for any damages or losses resulting from the use of this tool."
+        },
+        jp: {
+            subtitle: "航空・工学向け 単位換算ツール",
+            tabLength: "寸法",
+            tabDistance: "距離",
+            tabTorque: "トルク",
+            tabPressure: "圧力",
+            tabVolume: "体積",
+            tabWeight: "重量",
+            tabSpeed: "速度",
+            tabSI: "SI接頭辞",
+            inputValUnit: "数値と単位を入力",
+            inputValPrefix: "数値と基準接頭辞を選択",
+            quickInch: "インチワンタップ入力",
+            resMm: "ミリメートル (mm)",
+            resCm: "センチメートル (cm)",
+            resFt: "フィート (ft)",
+            resDec: "小数インチ (in)",
+            resFrac64: "最寄り 1/64 帯分数",
+            resFrac128: "最寄り 1/128 帯分数",
+            disclaimer: "<strong>免責事項:</strong> 本ツールは参考および教育目的で提供されています。実務での使用にあたっては、必ず公式のマニュアルや規程をご確認ください。本ツールの計算結果によって生じた事故や損害について、開発者は一切の責任を負いません。"
+        }
+    };
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        document.getElementById('btn-jp').classList.toggle('active', lang === 'jp');
+
+        const t = i18n[lang];
+        document.getElementById('i18n-subtitle').textContent = t.subtitle;
+        document.getElementById('tab-btn-length').textContent = t.tabLength;
+        document.getElementById('tab-btn-distance').textContent = t.tabDistance;
+        document.getElementById('tab-btn-torque').textContent = t.tabTorque;
+        document.getElementById('tab-btn-pressure').textContent = t.tabPressure;
+        document.getElementById('tab-btn-volume').textContent = t.tabVolume;
+        document.getElementById('tab-btn-weight').textContent = t.tabWeight;
+        document.getElementById('tab-btn-speed').textContent = t.tabSpeed;
+        document.getElementById('tab-btn-si').textContent = t.tabSI;
+
+        document.getElementById('lbl-input-length').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-dist').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-torq').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-pres').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-vol').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-wt').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-spd').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-si').textContent = t.inputValPrefix;
+        document.getElementById('lbl-quick-length').textContent = t.quickInch;
+
+        document.getElementById('lbl-res-mm').textContent = t.resMm;
+        document.getElementById('lbl-res-cm').textContent = t.resCm;
+        document.getElementById('lbl-res-ft').textContent = t.resFt;
+        document.getElementById('lbl-res-dec').textContent = t.resDec;
+        document.getElementById('lbl-res-frac64').textContent = t.resFrac64;
+        document.getElementById('lbl-res-frac128').textContent = t.resFrac128;
+
+        document.getElementById('i18n-disclaimer').innerHTML = t.disclaimer;
+    }
+
+    function switchTab(evt, tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        
+        evt.target.classList.add('active');
+        document.getElementById('tab-' + tabName).classList.add('active');
+    }
+
+    function gcd(a, b) {
+        return b === 0 ? a : gcd(b, a % b);
+    }
+
+    function formatMixedFractionAndDiff(inchVal, denominator) {
+        if (isNaN(inchVal)) return '-';
+
+        const isNegative = inchVal < 0;
+        const absVal = Math.abs(inchVal);
+
+        const totalSteps = Math.round(absVal * denominator);
+        const whole = Math.floor(totalSteps / denominator);
+        const rem = totalSteps % denominator;
+
+        let fracStr = "";
+        if (rem === 0) {
+            fracStr = whole === 0 ? "0 in" : `${whole} in`;
+        } else {
+            const g = gcd(rem, denominator);
+            const num = rem / g;
+            const den = denominator / g;
+            fracStr = whole > 0 ? `${whole} ${num}/${den} in` : `${num}/${den} in`;
+        }
+
+        if (isNegative && (whole > 0 || rem > 0)) {
+            fracStr = "-" + fracStr;
+        }
+
+        const nearestInch = (isNegative ? -1 : 1) * (totalSteps / denominator);
+        const diffInch = inchVal - nearestInch;
+        const diffMm = diffInch * 25.4;
+
+        const signMm = diffMm >= 0 ? '+' : '';
+        const signIn = diffInch >= 0 ? '+' : '';
+
+        return `${fracStr} (${signMm}${diffMm.toFixed(3)}mm / ${signIn}${diffInch.toFixed(4)}in)`;
+    }
+
+    // --- 1. Length ---
+    function calcLength() {
+        const str = document.getElementById('lenInput').value.trim();
+        const unit = document.getElementById('lenUnit').value;
+        let inch = 0;
+
+        if (!str) {
+            document.getElementById('len-mm').textContent = '-';
+            document.getElementById('len-cm').textContent = '-';
+            document.getElementById('len-ft').textContent = '-';
+            document.getElementById('len-dec').textContent = '-';
+            document.getElementById('len-frac64').textContent = '-';
+            document.getElementById('len-frac128').textContent = '-';
+            return;
+        }
+
+        if (unit === 'in') {
+            if (str.includes('/')) {
+                const p = str.split('/');
+                if (p.length === 2 && parseFloat(p[1]) !== 0) {
+                    inch = parseFloat(p[0]) / parseFloat(p[1]);
                 }
             } else {
-                inchVal = parseFloat(valStr);
+                inch = parseFloat(str);
             }
-
-            if (isNaN(inchVal)) {
-                resMmEl.textContent = 'エラー';
-                resCmEl.textContent = 'エラー';
-                resDecEl.textContent = 'エラー';
-                return;
-            }
-
-            const mm = inchVal * 25.4;
-            const cm = mm / 10;
-
-            resMmEl.textContent = Number(mm.toFixed(4)) + ' mm';
-            resCmEl.textContent = Number(cm.toFixed(4)) + ' cm';
-            resDecEl.textContent = Number(inchVal.toFixed(4)) + ' in';
+        } else if (unit === 'mm') {
+            inch = parseFloat(str) / 25.4;
+        } else if (unit === 'cm') {
+            inch = (parseFloat(str) * 10) / 25.4;
+        } else if (unit === 'ft') {
+            inch = parseFloat(str) * 12;
         }
 
-        function setInputValue(val) {
-            inputEl.value = val;
-            calculate();
+        if (isNaN(inch)) {
+            document.getElementById('len-mm').textContent = 'Error';
+            document.getElementById('len-cm').textContent = 'Error';
+            document.getElementById('len-ft').textContent = 'Error';
+            document.getElementById('len-dec').textContent = 'Error';
+            document.getElementById('len-frac64').textContent = 'Error';
+            document.getElementById('len-frac128').textContent = 'Error';
+            return;
         }
 
-        inputEl.addEventListener('input', calculate);
-        calculate();
-    </script>
+        const mm = inch * 25.4;
+        const cm = mm / 10;
+        const ft = inch / 12;
+
+        document.getElementById('len-mm').textContent = mm.toFixed(4) + ' mm';
+        document.getElementById('len-cm').textContent = cm.toFixed(4) + ' cm';
+        document.getElementById('len-ft').textContent = ft.toFixed(4) + ' ft';
+        document.getElementById('len-dec').textContent = inch.toFixed(4) + ' in';
+
+        document.getElementById('len-frac64').textContent = formatMixedFractionAndDiff(inch, 64);
+        document.getElementById('len-frac128').textContent = formatMixedFractionAndDiff(inch, 128);
+    }
+
+    function setLen(val) {
+        document.getElementById('lenUnit').value = 'in';
+        document.getElementById('lenInput').value = val;
+        calcLength();
+    }
+
+    // --- 2. Distance ---
+    function calcDistance() {
+        const val = parseFloat(document.getElementById('distInput').value);
+        const unit = document.getElementById('distUnit').value;
+
+        if (isNaN(val)) return;
+
+        let m = 0;
+        if (unit === 'NM') m = val * 1852;
+        else if (unit === 'km') m = val * 1000;
+        else if (unit === 'm') m = val;
+        else if (unit === 'yd') m = val * 0.9144;
+        else if (unit === 'ft') m = val * 0.3048;
+
+        document.getElementById('dist-nm').textContent = (m / 1852).toFixed(4) + ' NM';
+        document.getElementById('dist-km').textContent = (m / 1000).toFixed(4) + ' km';
+        document.getElementById('dist-m').textContent = m.toFixed(2) + ' m';
+        document.getElementById('dist-yd').textContent = (m / 0.9144).toFixed(2) + ' yd';
+        document.getElementById('dist-ft').textContent = (m / 0.3048).toFixed(2) + ' ft';
+    }
+
+    // --- 3. Torque ---
+    function calcTorque() {
+        const val = parseFloat(document.getElementById('torqInput').value);
+        const unit = document.getElementById('torqUnit').value;
+
+        if (isNaN(val)) return;
+
+        let nm = 0;
+        if (unit === 'in-lb') nm = val * 0.112984829;
+        else if (unit === 'ft-lb') nm = val * 1.35581795;
+        else if (unit === 'Nm') nm = val;
+        else if (unit === 'kgfcm') nm = val * 0.0980665;
+
+        document.getElementById('torq-inlb').textContent = (nm / 0.112984829).toFixed(2) + ' in-lb';
+        document.getElementById('torq-ftlb').textContent = (nm / 1.35581795).toFixed(2) + ' ft-lb';
+        document.getElementById('torq-nm').textContent = nm.toFixed(2) + ' N・m';
+        document.getElementById('torq-kgfcm').textContent = (nm / 0.0980665).toFixed(2) + ' kgf・cm';
+    }
+
+    // --- 4. Pressure ---
+    function calcPressure() {
+        const val = parseFloat(document.getElementById('presInput').value);
+        const unit = document.getElementById('presUnit').value;
+
+        if (isNaN(val)) return;
+
+        let psi = 0;
+        if (unit === 'psi') psi = val;
+        else if (unit === 'bar') psi = val * 14.5037738;
+        else if (unit === 'inhg') psi = val * 0.491154077;
+        else if (unit === 'hpa') psi = val * 0.0145037738;
+
+        document.getElementById('pres-psi').textContent = psi.toFixed(2) + ' PSI';
+        document.getElementById('pres-bar').textContent = (psi / 14.5037738).toFixed(3) + ' bar';
+        document.getElementById('pres-inhg').textContent = (psi / 0.491154077).toFixed(2) + ' inHg';
+        document.getElementById('pres-hpa').textContent = (psi / 0.0145037738).toFixed(1) + ' hPa';
+    }
+
+    // --- 5. Volume ---
+    function calcVolume() {
+        const val = parseFloat(document.getElementById('volInput').value);
+        const unit = document.getElementById('volUnit').value;
+
+        if (isNaN(val)) return;
+
+        let l = 0;
+        if (unit === 'qt') l = val * 0.946352946;
+        else if (unit === 'pt') l = val * 0.473176473;
+        else if (unit === 'gal') l = val * 3.785411784;
+        else if (unit === 'l') l = val;
+        else if (unit === 'ml') l = val / 1000;
+
+        document.getElementById('vol-qt').textContent = (l / 0.946352946).toFixed(3) + ' QT';
+        document.getElementById('vol-pt').textContent = (l / 0.473176473).toFixed(3) + ' PT';
+        document.getElementById('vol-gal').textContent = (l / 3.785411784).toFixed(3) + ' Gal';
+        document.getElementById('vol-l').textContent = l.toFixed(3) + ' L';
+        document.getElementById('vol-ml').textContent = (l * 1000).toFixed(1) + ' mL';
+    }
+
+    // --- 6. Weight ---
+    function calcWeight() {
+        const val = parseFloat(document.getElementById('wtInput').value);
+        const unit = document.getElementById('wtUnit').value;
+
+        if (isNaN(val)) return;
+
+        let kg = 0;
+        if (unit === 'lbs') kg = val * 0.45359237;
+        else if (unit === 'kg') kg = val;
+
+        document.getElementById('wt-lbs').textContent = (kg / 0.45359237).toFixed(2) + ' lbs';
+        document.getElementById('wt-kg').textContent = kg.toFixed(2) + ' kg';
+    }
+
+    // --- 7. Speed ---
+    function calcSpeed() {
+        const val = parseFloat(document.getElementById('spdInput').value);
+        const unit = document.getElementById('spdUnit').value;
+
+        if (isNaN(val)) return;
+
+        let kmh = 0;
+        if (unit === 'kt') kmh = val * 1.852;
+        else if (unit === 'ms') kmh = val * 3.6;
+        else if (unit === 'kmh') kmh = val;
+        else if (unit === 'mph') kmh = val * 1.609344;
+
+        document.getElementById('spd-kt').textContent = (kmh / 1.852).toFixed(2) + ' kt';
+        document.getElementById('spd-ms').textContent = (kmh / 3.6).toFixed(2) + ' m/s';
+        document.getElementById('spd-kmh').textContent = kmh.toFixed(2) + ' km/h';
+        document.getElementById('spd-mph').textContent = (kmh / 1.609344).toFixed(2) + ' mph';
+    }
+
+    // --- 8. SI Prefix ---
+    function calcSI() {
+        const val = parseFloat(document.getElementById('siInput').value);
+        const exp = parseInt(document.getElementById('siUnit').value);
+
+        if (isNaN(val)) return;
+
+        const baseVal = val * Math.pow(10, exp);
+
+        function formatNum(num) {
+            if (num === 0) return '0';
+            if (Math.abs(num) >= 1e6 || Math.abs(num) < 1e-4) {
+                return num.toExponential(4);
+            }
+            return Number(num.toFixed(6)).toString();
+        }
+
+        document.getElementById('si-G').textContent = formatNum(baseVal / 1e9);
+        document.getElementById('si-M').textContent = formatNum(baseVal / 1e6);
+        document.getElementById('si-k').textContent = formatNum(baseVal / 1e3);
+        document.getElementById('si-base').textContent = formatNum(baseVal);
+        document.getElementById('si-c').textContent = formatNum(baseVal / 1e-2);
+        document.getElementById('si-m').textContent = formatNum(baseVal / 1e-3);
+        document.getElementById('si-u').textContent = formatNum(baseVal / 1e-6);
+        document.getElementById('si-n').textContent = formatNum(baseVal / 1e-9);
+    }
+
+    // 初期化実行
+    calcLength();
+    calcDistance();
+    calcTorque();
+    calcPressure();
+    calcVolume();
+    calcWeight();
+    calcSpeed();
+    calcSI();
+</script>
+
 </body>
 </html>
