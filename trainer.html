@@ -294,13 +294,19 @@
         }
 
         select {
-            padding: 8px;
+            padding: 10px;
+            width: 100%;
             font-size: 0.95rem;
             font-weight: bold;
             background: var(--input-bg);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             border-radius: 8px;
             color: #fff;
+            outline: none;
+        }
+
+        select:focus {
+            border-color: var(--accent);
         }
 
         .btn {
@@ -351,6 +357,17 @@
             color: var(--accent-green);
         }
 
+        .quiz-range-display {
+            background: #0284c7;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
         .quiz-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -394,52 +411,6 @@
             background: var(--btn-bg);
             color: white;
             border-color: var(--accent);
-        }
-
-        /* 物理ロータリーノブ風UI */
-        .rotary-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin: 12px 0;
-            background: #0f172a;
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-
-        .knob-wrapper {
-            position: relative;
-            width: 70px;
-            height: 70px;
-            background: #334155;
-            border-radius: 50%;
-            border: 3px solid #64748b;
-            box-shadow: inset 0 2px 5px rgba(255,255,255,0.2), 0 4px 10px rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .knob-pointer {
-            position: absolute;
-            width: 6px;
-            height: 28px;
-            background: #ef4444;
-            top: 6px;
-            border-radius: 3px;
-            transform-origin: bottom center;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .knob-center {
-            width: 24px;
-            height: 24px;
-            background: #1e293b;
-            border-radius: 50%;
-            z-index: 2;
-            border: 2px solid #475569;
         }
 
         footer {
@@ -540,15 +511,15 @@
             <!-- アナログテスター文字盤 -->
             <canvas id="meterCanvas" width="440" height="220"></canvas>
 
-            <!-- 回転レンジノブUI -->
-            <div class="rotary-container">
-                <div class="knob-wrapper">
-                    <div class="knob-pointer" id="knobPointer"></div>
-                    <div class="knob-center"></div>
-                </div>
-                <div style="flex: 1;">
-                    <label id="lbl-range-select">Selector Switch:</label>
-                    <select id="meterRangeSelect" onchange="onRangeChange()">
+            <!-- クイズモード時のみ表示される「現在のレンジ」 -->
+            <div id="quiz-range-display-container" style="display: none;">
+                <div class="quiz-range-display" id="quiz-range-display">-</div>
+            </div>
+
+            <div id="meter-practice-controls" class="controls">
+                <div style="margin-bottom: 8px;">
+                    <label id="lbl-range-select" style="margin-bottom: 4px;">Selector Switch:</label>
+                    <select id="meterRangeSelect" onchange="drawMeter()">
                         <optgroup label="DC Voltage (DCV)">
                             <option value="DCV_2.5">DC 2.5V</option>
                             <option value="DCV_10" selected>DC 10V</option>
@@ -562,9 +533,6 @@
                         </optgroup>
                     </select>
                 </div>
-            </div>
-
-            <div id="meter-practice-controls" class="controls">
                 <div class="control-row">
                     <label id="lbl-needle-pos">Needle Position:</label>
                     <input type="range" id="meterRange" min="0" max="100" value="50" oninput="drawMeter()">
@@ -578,7 +546,7 @@
             </div>
 
             <div id="meter-quiz-controls" class="controls" style="display: none;">
-                <button class="btn" onclick="nextMeterQuiz()" id="btn-next-meter-quiz">New Question</button>
+                <button class="btn" onclick="nextMeterQuiz()" id="btn-next-meter-quiz2">New Question</button>
                 <div class="quiz-options" id="meterQuizOptions"></div>
                 <div id="meterQuizFeedback" style="text-align: center; margin-top: 10px; font-weight: bold; min-height: 24px;"></div>
             </div>
@@ -606,6 +574,7 @@
             reading: "Reading:",
             breakdown: "Breakdown:",
             rangeSelect: "Selector Switch:",
+            currentRange: "Set Range:",
             needlePos: "Needle Position:",
             measuredVal: "Measured Value:",
             newQuestion: "New Question",
@@ -626,6 +595,7 @@
             reading: "測定値:",
             breakdown: "内訳:",
             rangeSelect: "レンジ切替スイッチ:",
+            currentRange: "設定レンジ:",
             needlePos: "針の位置:",
             measuredVal: "測定値:",
             newQuestion: "次の問題",
@@ -680,13 +650,20 @@
         document.getElementById('lbl-measured-val').textContent = t.measuredVal;
 
         document.getElementById('btn-next-caliper-quiz').textContent = t.newQuestion;
-        document.getElementById('btn-next-meter-quiz').textContent = t.newQuestion;
+        document.getElementById('btn-next-meter-quiz2').textContent = t.newQuestion;
 
         document.getElementById('menu-about').textContent = t.menuAbout;
         document.getElementById('modal-title').textContent = t.aboutTitle;
         document.getElementById('modal-body').textContent = t.aboutBody;
 
         document.getElementById('i18n-disclaimer').innerHTML = t.disclaimer;
+
+        // クイズモード中ならレンジ表示のテキストも更新
+        if (meterMode === 'quiz') {
+            const selectEl = document.getElementById('meterRangeSelect');
+            const rangeText = selectEl.options[selectEl.selectedIndex].text;
+            document.getElementById('quiz-range-display').innerHTML = `<span>${i18n[currentLang].currentRange}</span> <span style="font-size:1.2rem; margin-left:8px;">${rangeText}</span>`;
+        }
 
         drawCaliper();
         drawMeter();
@@ -851,36 +828,20 @@
     }
 
     // ==========================================
-    // 2. Multimeter Canvas & Rotary Knob Logic
+    // 2. Multimeter Canvas Logic
     // ==========================================
     let meterMode = 'practice';
     let currentMeterQuizPos = 50;
     let currentMeterQuizRange = 'DCV_10';
-
-    const rangeAngles = {
-        'DCV_2.5': -60,
-        'DCV_10': -30,
-        'DCV_50': 0,
-        'DCV_250': 30,
-        'OHM_x1': 90,
-        'OHM_x10': 120,
-        'OHM_x1k': 150
-    };
-
-    function onRangeChange() {
-        const selectedKey = document.getElementById('meterRangeSelect').value;
-        const angle = rangeAngles[selectedKey] || 0;
-        document.getElementById('knobPointer').style.transform = `rotate(${angle}deg)`;
-        drawMeter();
-    }
 
     function setMeterMode(mode) {
         meterMode = mode;
         document.getElementById('meter-mode-practice').classList.toggle('active', mode === 'practice');
         document.getElementById('meter-mode-quiz').classList.toggle('active', mode === 'quiz');
 
-        document.getElementById('meter-practice-controls').style.display = mode === 'practice' ? 'flex' : 'none';
+        document.getElementById('meter-practice-controls').style.display = mode === 'practice' ? 'block' : 'none';
         document.getElementById('meter-quiz-controls').style.display = mode === 'quiz' ? 'flex' : 'none';
+        document.getElementById('quiz-range-display-container').style.display = mode === 'quiz' ? 'block' : 'none';
 
         if (mode === 'quiz') nextMeterQuiz();
         else drawMeter();
@@ -946,16 +907,9 @@
         });
         ctx.fillText("OHM (Ω)", cx - 20, cy - rTop + 32);
 
-        // --- 2. Parallax Mirror (銀色の鏡の帯) ---
-        const rMirror = 172;
-        ctx.fillStyle = "#cbd5e1";
-        ctx.beginPath();
-        ctx.arc(cx, cy, rMirror, Math.PI * 1.23, Math.PI * 1.77);
-        ctx.arc(cx, cy, rMirror - 8, Math.PI * 1.77, Math.PI * 1.23, true);
-        ctx.fill();
-
-        // --- 3. DCV / ACV Parallel Lines (Black Lines) ---
-        const rDCV = 158;
+        // --- 2. DCV / ACV Parallel Lines (Black Lines) ---
+        // ミラーを削除し、目盛り同士の間隔を調整してスッキリさせました
+        const rDCV = 165;
         ctx.strokeStyle = "#0f172a";
         ctx.lineWidth = 1.5;
         ctx.beginPath();
@@ -980,8 +934,8 @@
             const v50 = Math.round(p * 50);
             const v10 = Math.round(p * 10);
 
-            const lx = cx + Math.cos(ang) * (rDCV - 16);
-            const ly = cy + Math.sin(ang) * (rDCV - 16);
+            const lx = cx + Math.cos(ang) * (rDCV - 14);
+            const ly = cy + Math.sin(ang) * (rDCV - 14);
 
             if (i % 2 === 0) {
                 ctx.fillText(`${v250}`, lx - 8, ly + 2);
@@ -990,9 +944,9 @@
             }
         }
 
-        ctx.fillText("DCV / ACV", 35, 140);
+        ctx.fillText("DCV / ACV", 35, 120);
 
-        // --- 4. Red Needle (赤針) ---
+        // --- 3. Red Needle (赤針) ---
         const needleAng = Math.PI * 1.23 + (pos / 100) * (Math.PI * 0.54);
         const nx = cx + Math.cos(needleAng) * (rTop + 10);
         const ny = cy + Math.sin(needleAng) * (rTop + 10);
@@ -1011,7 +965,9 @@
         ctx.fillStyle = "#1e293b";
         ctx.beginPath(); ctx.arc(cx, cy, 10, 0, Math.PI * 2); ctx.fill();
 
-        document.getElementById('meterReading').textContent = calculateMeterValue(pos, range);
+        if (meterMode === 'practice') {
+            document.getElementById('meterReading').textContent = calculateMeterValue(pos, range);
+        }
     }
 
     function nextMeterQuiz() {
@@ -1019,8 +975,14 @@
         const ranges = ['DCV_2.5', 'DCV_10', 'DCV_50', 'DCV_250', 'OHM_x1', 'OHM_x10', 'OHM_x1k'];
         currentMeterQuizRange = ranges[Math.floor(Math.random() * ranges.length)];
 
-        document.getElementById('meterRangeSelect').value = currentMeterQuizRange;
-        onRangeChange();
+        const selectEl = document.getElementById('meterRangeSelect');
+        selectEl.value = currentMeterQuizRange;
+        
+        // UIに現在のレンジをデカデカと表示
+        const rangeText = selectEl.options[selectEl.selectedIndex].text;
+        document.getElementById('quiz-range-display').innerHTML = `<span>${i18n[currentLang].currentRange}</span> <span style="font-size:1.2rem; margin-left:8px;">${rangeText}</span>`;
+
+        drawMeter();
 
         document.getElementById('meterQuizFeedback').textContent = "";
         const optionsContainer = document.getElementById('meterQuizOptions');
@@ -1058,7 +1020,7 @@
 
     // Init
     drawCaliper();
-    onRangeChange();
+    drawMeter();
 </script>
 
 </body>
