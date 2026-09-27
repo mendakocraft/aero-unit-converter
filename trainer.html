@@ -583,7 +583,7 @@
             wrong: "不正解！もう一度考えよう❌",
             menuAbout: "このサイトについて",
             aboutTitle: "AeroUnitConverter について",
-            aboutBody: "AeroUnitConverter は、航空整備士やエンジニア向けに開発された軽量・オフライン対応の単位換算ウェブツールです。各種単位換算をはじめ、Dent/Scratch判定用の分数インチ誤差計算や、実務で役立つトレーニング機能を備えています。",
+            aboutBody: "AeroUnitConverter は、航空ファンやエンジニア向けに開発された軽量・オフライン対応の単位換算ウェブツールです。各種単位換算をはじめ、Dent/Scratch判定用の分数インチ誤差計算や、実務で役立つトレーニング機能を備えています。",
             disclaimer: "<strong>免責事項:</strong> 本トレーニングツールは練習および教育目的のみで提供されています。実務では必ず公式のマニュアルをご確認ください。"
         }
     };
@@ -704,9 +704,9 @@
 
         const startX = 30;
         const mainScaleY = 50;
-        const ppx = 2.4; // pixels per 1/128 inch
+        const ppx = 2.4;
 
-        // Draw Main Scale (本尺: 1/16 in刻み)
+        // Draw Main Scale
         ctx.strokeStyle = "#0f172a";
         ctx.fillStyle = "#0f172a";
         ctx.lineWidth = 1.5;
@@ -734,7 +734,7 @@
             }
         }
 
-        // Draw Vernier Scale (副尺: 1/128 in, 8 divisions = 7/16 in)
+        // Draw Vernier Scale
         const vernierX = startX + steps * ppx;
         const vernierY = mainScaleY;
 
