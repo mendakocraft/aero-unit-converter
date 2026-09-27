@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1Z0REVFHH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-Z1Z0REVFHH');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUC Training - Vernier Caliper & Multimeter Trainer</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --input-bg: #334155;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --accent: #38bdf8;
+            --accent-green: #4ade80;
+            --btn-bg: #0284c7;
+            --btn-active: #0369a1;
+            --border: #475569;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .header-title h1 {
+            font-size: 1.3rem;
+            margin: 0;
+            color: var(--accent);
+        }
+
+        .header-title .subtitle {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        /* ハンバーガーボタン */
+        .menu-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-size: 1.2rem;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* スライドサイドメニュー */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 90;
+        }
+
+        .drawer-menu {
+            position: fixed;
+            top: 0; right: -280px;
+            width: 250px; height: 100%;
+            background: var(--card-bg);
+            border-left: 1px solid var(--border);
+            box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+            z-index: 100;
+            transition: right 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .drawer-menu.open {
+            right: 0;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .drawer-close {
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .drawer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .drawer-link {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 8px;
+            background: var(--input-bg);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .drawer-link:active {
+            border-color: var(--accent);
+        }
+
+        .lang-switch {
+            display: flex;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2px;
+            margin-top: auto;
+        }
+
+        .lang-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            padding: 6px 0;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .lang-btn.active {
+            background: var(--accent);
+            color: var(--bg-color);
+        }
+
+        /* モーダル (About用) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 110;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .modal-body {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin-bottom: 16px;
+        }
+
+        .modal-close-btn {
+            background: var(--btn-bg);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--card-bg);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            padding: 10px 0;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: var(--bg-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        canvas {
+            background: #ffffff;
+            border-radius: 10px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+        }
+
+        select {
+            padding: 8px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+        }
+
+        .btn {
+            background: var(--btn-bg);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .btn:active {
+            background: var(--btn-active);
+        }
+
+        .results {
+            margin-top: 14px;
+            background: #090d16;
+            border-radius: 12px;
+            padding: 12px 16px;
+            border: 1px solid #1e293b;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: var(--text-sub);
+            font-size: 0.85rem;
+        }
+
+        .result-val {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-green);
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .quiz-opt-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .quiz-opt-btn:active {
+            border-color: var(--accent);
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text-sub);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .mode-btn.active {
+            background: var(--btn-bg);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        footer {
+            margin-top: 24px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 0.72rem;
+            color: #64748b;
+            line-height: 1.4;
+            padding: 0 8px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- サイドメニュー ＆ オーバーレイ -->
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<div class="drawer-menu" id="drawerMenu">
+    <div class="drawer-header">
+        <strong style="color: var(--accent);">Navigation</strong>
+        <button class="drawer-close" onclick="closeMenu()">✕</button>
+    </div>
+    <div class="drawer-links">
+        <a href="index.html" class="drawer-link">✈️ AeroUnitConverter</a>
+        <a href="trainer.html" class="drawer-link" style="border: 1px solid var(--accent);">🎓 Training Mode</a>
+        <div class="drawer-link" onclick="openAbout()">ℹ️ <span id="menu-about">About This Site</span></div>
+    </div>
+    <div class="lang-switch">
+        <button class="lang-btn active" id="btn-en" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" id="btn-jp" onclick="setLanguage('jp')">JP</button>
+    </div>
+</div>
+
+<!-- About モーダル -->
+<div class="modal-overlay" id="aboutModal">
+    <div class="modal-content">
+        <div class="modal-header" id="modal-title">About AeroUnitConverter</div>
+        <div class="modal-body" id="modal-body">
+            AeroUnitConverter is a lightweight, offline-ready web application designed for aviation mechanics and engineering professionals. Features include unit conversion, fraction/decimal calculations for damage limit checks, and gauge reading practice.
+        </div>
+        <button class="modal-close-btn" onclick="closeAbout()">OK</button>
+    </div>
+</div>
+
+<div class="container">
+    <header>
+        <div class="header-title">
+            <h1>🎓 AUC Trainer</h1>
+            <div class="subtitle" id="i18n-subtitle">Vernier Caliper & Meter Reading Practice</div>
+        </div>
+        <button class="menu-btn" onclick="openMenu()">☰</button>
+    </header>
+
+    <!-- タブ（ノギス / テスター） -->
+    <div class="tabs">
+        <button class="tab-btn active" id="tab-btn-caliper" onclick="switchTab(event, 'caliper')">1/128" Caliper</button>
+        <button class="tab-btn" id="tab-btn-meter" onclick="switchTab(event, 'meter')">Analog Multimeter</button>
+    </div>
+
+    <div class="card">
+        <!-- 1. Vernier Caliper Trainer -->
+        <div id="tab-caliper" class="tab-content active">
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="caliper-mode-practice" onclick="setCaliperMode('practice')">Practice Mode</button>
+                <button class="mode-btn" id="caliper-mode-quiz" onclick="setCaliperMode('quiz')">Quiz Mode</button>
+            </div>
+
+            <canvas id="caliperCanvas" width="440" height="150"></canvas>
+
+            <div id="caliper-practice-controls" class="controls">
+                <div class="control-row">
+                    <label id="lbl-slide-position">Slide Position:</label>
+                    <input type="range" id="caliperRange" min="0" max="128" value="16" oninput="drawCaliper()">
+                </div>
+                <div class="results">
+                    <div class="result-row">
+                        <span class="result-label" id="lbl-reading">Reading:</span>
+                        <span class="result-val" id="caliperReading">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label" id="lbl-breakdown">Breakdown:</span>
+                        <span class="result-val" id="caliperBreakdown" style="font-size: 0.85rem; color: var(--accent);">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="caliper-quiz-controls" class="controls" style="display: none;">
+                <button class="btn" onclick="nextCaliperQuiz()" id="btn-next-caliper-quiz">New Question</button>
+                <div class="quiz-options" id="caliperQuizOptions"></div>
+                <div id="caliperQuizFeedback" style="text-align: center; margin-top: 10px; font-weight: bold; min-height: 24px;"></div>
+            </div>
+        </div>
+
+        <!-- 2. Analog Multimeter Trainer -->
+        <div id="tab-meter" class="tab-content">
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="meter-mode-practice" onclick="setMeterMode('practice')">Practice Mode</button>
+                <button class="mode-btn" id="meter-mode-quiz" onclick="setMeterMode('quiz')">Quiz Mode</button>
+            </div>
+
+            <canvas id="meterCanvas" width="440" height="200"></canvas>
+
+            <div id="meter-practice-controls" class="controls">
+                <div class="control-row">
+                    <label id="lbl-range-select">Range Selector:</label>
+                    <select id="meterRangeSelect" onchange="drawMeter()">
+                        <optgroup label="DC Voltage">
+                            <option value="DCV_2.5">DC 2.5V</option>
+                            <option value="DCV_10" selected>DC 10V</option>
+                            <option value="DCV_50">DC 50V</option>
+                            <option value="DCV_250">DC 250V</option>
+                        </optgroup>
+                        <optgroup label="Resistance (Ohms)">
+                            <option value="OHM_x1">Ω ×1</option>
+                            <option value="OHM_x10">Ω ×10</option>
+                            <option value="OHM_x1k">Ω ×1k</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="control-row">
+                    <label id="lbl-needle-pos">Needle Position:</label>
+                    <input type="range" id="meterRange" min="0" max="100" value="50" oninput="drawMeter()">
+                </div>
+                <div class="results">
+                    <div class="result-row">
+                        <span class="result-label" id="lbl-measured-val">Measured Value:</span>
+                        <span class="result-val" id="meterReading">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="meter-quiz-controls" class="controls" style="display: none;">
+                <button class="btn" onclick="nextMeterQuiz()" id="btn-next-meter-quiz">New Question</button>
+                <div class="quiz-options" id="meterQuizOptions"></div>
+                <div id="meterQuizFeedback" style="text-align: center; margin-top: 10px; font-weight: bold; min-height: 24px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p id="i18n-disclaimer">
+            <strong>Disclaimer:</strong> This training tool is for reference and educational practice only. Always consult official aircraft/equipment maintenance manuals.
+        </p>
+    </footer>
+</div>
+
+<script>
+    let currentLang = 'en';
+
+    const i18n = {
+        en: {
+            subtitle: "Vernier Caliper & Meter Reading Practice",
+            tabCaliper: "1/128\" Caliper",
+            tabMeter: "Analog Multimeter",
+            modePractice: "Practice Mode",
+            modeQuiz: "Quiz Mode",
+            slidePos: "Slide Position:",
+            reading: "Reading:",
+            breakdown: "Breakdown:",
+            rangeSelect: "Range Selector:",
+            needlePos: "Needle Position:",
+            measuredVal: "Measured Value:",
+            newQuestion: "New Question",
+            correct: "✨ Correct!",
+            wrong: "❌ Try Again!",
+            menuAbout: "About This Site",
+            aboutTitle: "About AeroUnitConverter",
+            aboutBody: "AeroUnitConverter is a lightweight, offline-ready web application designed for aviation mechanics and engineering professionals. Features include unit conversion, fraction/decimal calculations for damage limit checks, and gauge reading practice.",
+            disclaimer: "<strong>Disclaimer:</strong> This training tool is for reference and educational practice only. Always consult official aircraft/equipment maintenance manuals."
+        },
+        jp: {
+            subtitle: "バーニアノギス・アナログテスター 読み方トレーニング",
+            tabCaliper: "1/128\" ノギス",
+            tabMeter: "アナログマルチテスター",
+            modePractice: "練習モード",
+            modeQuiz: "クイズモード",
+            slidePos: "スライド位置:",
+            reading: "測定値:",
+            breakdown: "内訳:",
+            rangeSelect: "測定レンジ:",
+            needlePos: "針の位置:",
+            measuredVal: "測定値:",
+            newQuestion: "次の問題",
+            correct: "正解です！✨",
+            wrong: "不正解！もう一度考えよう❌",
+            menuAbout: "このサイトについて",
+            aboutTitle: "AeroUnitConverter について",
+            aboutBody: "AeroUnitConverter は、航空整備士やエンジニア向けに開発された軽量・オフライン対応の単位換算ウェブツールです。各種単位換算をはじめ、Dent/Scratch判定用の分数インチ誤差計算や、実務で役立つトレーニング機能を備えています。",
+            disclaimer: "<strong>免責事項:</strong> 本トレーニングツールは練習および教育目的のみで提供されています。実務では必ず公式のマニュアルをご確認ください。"
+        }
+    };
+
+    /* メニュー開閉 */
+    function openMenu() {
+        document.getElementById('drawerMenu').classList.add('open');
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeMenu() {
+        document.getElementById('drawerMenu').classList.remove('open');
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    /* About モーダル開閉 */
+    function openAbout() {
+        closeMenu();
+        document.getElementById('aboutModal').style.display = 'flex';
+    }
+
+    function closeAbout() {
+        document.getElementById('aboutModal').style.display = 'none';
+    }
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        document.getElementById('btn-jp').classList.toggle('active', lang === 'jp');
+
+        const t = i18n[lang];
+        document.getElementById('i18n-subtitle').textContent = t.subtitle;
+        document.getElementById('tab-btn-caliper').textContent = t.tabCaliper;
+        document.getElementById('tab-btn-meter').textContent = t.tabMeter;
+        
+        document.getElementById('caliper-mode-practice').textContent = t.modePractice;
+        document.getElementById('caliper-mode-quiz').textContent = t.modeQuiz;
+        document.getElementById('meter-mode-practice').textContent = t.modePractice;
+        document.getElementById('meter-mode-quiz').textContent = t.modeQuiz;
+
+        document.getElementById('lbl-slide-position').textContent = t.slidePos;
+        document.getElementById('lbl-reading').textContent = t.reading;
+        document.getElementById('lbl-breakdown').textContent = t.breakdown;
+        document.getElementById('lbl-range-select').textContent = t.rangeSelect;
+        document.getElementById('lbl-needle-pos').textContent = t.needlePos;
+        document.getElementById('lbl-measured-val').textContent = t.measuredVal;
+
+        document.getElementById('btn-next-caliper-quiz').textContent = t.newQuestion;
+        document.getElementById('btn-next-meter-quiz').textContent = t.newQuestion;
+
+        document.getElementById('menu-about').textContent = t.menuAbout;
+        document.getElementById('modal-title').textContent = t.aboutTitle;
+        document.getElementById('modal-body').textContent = t.aboutBody;
+
+        document.getElementById('i18n-disclaimer').innerHTML = t.disclaimer;
+
+        drawCaliper();
+        drawMeter();
+    }
+
+    function switchTab(evt, tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        
+        evt.target.classList.add('active');
+        document.getElementById('tab-' + tabName).classList.add('active');
+
+        if(tabName === 'caliper') drawCaliper();
+        if(tabName === 'meter') drawMeter();
+    }
+
+    function gcd(a, b) {
+        return b === 0 ? a : gcd(b, a % b);
+    }
+
+    // ==========================================
+    // 1. Vernier Caliper Logic & Canvas
+    // ==========================================
+    let caliperMode = 'practice';
+    let currentCaliperQuizVal = 0;
+
+    function setCaliperMode(mode) {
+        caliperMode = mode;
+        document.getElementById('caliper-mode-practice').classList.toggle('active', mode === 'practice');
+        document.getElementById('caliper-mode-quiz').classList.toggle('active', mode === 'quiz');
+        
+        document.getElementById('caliper-practice-controls').style.display = mode === 'practice' ? 'flex' : 'none';
+        document.getElementById('caliper-quiz-controls').style.display = mode === 'quiz' ? 'flex' : 'none';
+
+        if (mode === 'quiz') nextCaliperQuiz();
+        else drawCaliper();
+    }
+
+    function getFractionText(val128) {
+        if (val128 === 0) return '0 in';
+        const whole = Math.floor(val128 / 128);
+        const rem = val128 % 128;
+
+        if (rem === 0) return `${whole} in`;
+
+        const g = gcd(rem, 128);
+        const num = rem / g;
+        const den = 128 / g;
+
+        return whole > 0 ? `${whole} ${num}/${den} in` : `${num}/${den} in`;
+    }
+
+    function drawCaliper() {
+        const canvas = document.getElementById('caliperCanvas');
+        const ctx = canvas.getContext('2d');
+        const steps = caliperMode === 'quiz' ? currentCaliperQuizVal : parseInt(document.getElementById('caliperRange').value);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Background
+        ctx.fillStyle = "#e2e8f0";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const startX = 30;
+        const mainScaleY = 50;
+        const ppx = 2.4; // pixels per 1/128 inch
+
+        // Draw Main Scale (本尺: 1/16 in刻み)
+        ctx.strokeStyle = "#0f172a";
+        ctx.fillStyle = "#0f172a";
+        ctx.lineWidth = 1.5;
+        ctx.font = "10px sans-serif";
+
+        for (let i = 0; i <= 16; i++) {
+            const x = startX + (i * 8) * ppx;
+            const isInch = i % 16 === 0;
+            const isHalf = i % 8 === 0;
+            const isQuarter = i % 4 === 0;
+
+            let h = 12;
+            if (isInch) h = 25;
+            else if (isHalf) h = 20;
+            else if (isQuarter) h = 16;
+
+            ctx.beginPath();
+            ctx.moveTo(x, mainScaleY);
+            ctx.lineTo(x, mainScaleY - h);
+            ctx.stroke();
+
+            if (i % 4 === 0) {
+                const label = i === 0 ? "0" : (i === 16 ? "1\"" : `${i/4}/4`);
+                ctx.fillText(label, x - 6, mainScaleY - h - 4);
+            }
+        }
+
+        // Draw Vernier Scale (副尺: 1/128 in, 8 divisions = 7/16 in)
+        const vernierX = startX + steps * ppx;
+        const vernierY = mainScaleY;
+
+        ctx.fillStyle = "#cbd5e1";
+        ctx.fillRect(vernierX - 10, vernierY, 8 * 7 * ppx + 20, 60);
+        ctx.strokeRect(vernierX - 10, vernierY, 8 * 7 * ppx + 20, 60);
+
+        ctx.fillStyle = "#0284c7";
+        ctx.strokeStyle = "#0284c7";
+        ctx.lineWidth = 1.5;
+
+        const mainStep16 = Math.floor(steps / 8);
+        const vernierMatch = steps % 8;
+
+        for (let j = 0; j <= 8; j++) {
+            const vx = vernierX + (j * 7) * ppx;
+            ctx.beginPath();
+            ctx.moveTo(vx, vernierY);
+            ctx.lineTo(vx, vernierY + 18);
+            ctx.stroke();
+
+            ctx.fillText(j.toString(), vx - 3, vernierY + 32);
+        }
+
+        // Breakdown Info
+        const mainPart = `${mainStep16}/16"`;
+        const vernierPart = `${vernierMatch}/128"`;
+        const totalFrac = getFractionText(steps);
+
+        document.getElementById('caliperReading').textContent = totalFrac;
+        document.getElementById('caliperBreakdown').textContent = `${mainPart} + ${vernierPart}`;
+    }
+
+    function nextCaliperQuiz() {
+        currentCaliperQuizVal = Math.floor(Math.random() * 96) + 8;
+        drawCaliper();
+
+        document.getElementById('caliperQuizFeedback').textContent = "";
+        const optionsContainer = document.getElementById('caliperQuizOptions');
+        optionsContainer.innerHTML = "";
+
+        const correctAns = getFractionText(currentCaliperQuizVal);
+        let choices = [correctAns];
+
+        while (choices.length < 4) {
+            let dummyVal = currentCaliperQuizVal + (Math.floor(Math.random() * 7) - 3) * 2;
+            if (dummyVal < 0) dummyVal = 4;
+            let dummyAns = getFractionText(dummyVal);
+            if (!choices.includes(dummyAns)) choices.push(dummyAns);
+        }
+
+        choices.sort(() => Math.random() - 0.5);
+
+        choices.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-opt-btn';
+            btn.textContent = opt;
+            btn.onclick = () => {
+                const fb = document.getElementById('caliperQuizFeedback');
+                if (opt === correctAns) {
+                    fb.textContent = i18n[currentLang].correct;
+                    fb.style.color = "var(--accent-green)";
+                } else {
+                    fb.textContent = i18n[currentLang].wrong;
+                    fb.style.color = "#f87171";
+                }
+            };
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    // ==========================================
+    // 2. Analog Multimeter Logic & Canvas
+    // ==========================================
+    let meterMode = 'practice';
+    let currentMeterQuizPos = 50;
+    let currentMeterQuizRange = 'DCV_10';
+
+    function setMeterMode(mode) {
+        meterMode = mode;
+        document.getElementById('meter-mode-practice').classList.toggle('active', mode === 'practice');
+        document.getElementById('meter-mode-quiz').classList.toggle('active', mode === 'quiz');
+
+        document.getElementById('meter-practice-controls').style.display = mode === 'practice' ? 'flex' : 'none';
+        document.getElementById('meter-quiz-controls').style.display = mode === 'quiz' ? 'flex' : 'none';
+
+        if (mode === 'quiz') nextMeterQuiz();
+        else drawMeter();
+    }
+
+    function calculateMeterValue(posPercent, rangeKey) {
+        if (rangeKey.startsWith('DCV_')) {
+            const maxVal = parseFloat(rangeKey.replace('DCV_', ''));
+            return (posPercent / 100 * maxVal).toFixed(2) + " V";
+        } else if (rangeKey.startsWith('OHM_')) {
+            const mult = rangeKey === 'OHM_x1' ? 1 : (rangeKey === 'OHM_x10' ? 10 : 1000);
+            if (posPercent > 98) return "0 Ω";
+            if (posPercent < 2) return "∞ Ω";
+
+            const rawOhm = Math.pow((100 - posPercent) / 10, 2.2);
+            const val = Math.round(rawOhm * mult);
+            return val >= 1000 ? (val / 1000).toFixed(1) + " kΩ" : val + " Ω";
+        }
+        return "-";
+    }
+
+    function drawMeter() {
+        const canvas = document.getElementById('meterCanvas');
+        const ctx = canvas.getContext('2d');
+        const pos = meterMode === 'quiz' ? currentMeterQuizPos : parseInt(document.getElementById('meterRange').value);
+        const range = meterMode === 'quiz' ? currentMeterQuizRange : document.getElementById('meterRangeSelect').value;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Arc Background
+        ctx.fillStyle = "#f8fafc";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const cx = canvas.width / 2;
+        const cy = 230;
+        const radius = 170;
+
+        // Draw Scales
+        ctx.lineWidth = 2;
+
+        ctx.strokeStyle = "#0f172a";
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, Math.PI * 1.25, Math.PI * 1.75);
+        ctx.stroke();
+
+        ctx.font = "10px sans-serif";
+        ctx.fillStyle = "#0f172a";
+
+        for (let i = 0; i <= 10; i++) {
+            const angle = Math.PI * 1.25 + (i / 10) * (Math.PI * 0.5);
+            const tx1 = cx + Math.cos(angle) * radius;
+            const ty1 = cy + Math.sin(angle) * radius;
+            const tx2 = cx + Math.cos(angle) * (radius - 10);
+            const ty2 = cy + Math.sin(angle) * (radius - 10);
+
+            ctx.beginPath();
+            ctx.moveTo(tx1, ty1);
+            ctx.lineTo(tx2, ty2);
+            ctx.stroke();
+
+            const lx = cx + Math.cos(angle) * (radius - 20);
+            const ly = cy + Math.sin(angle) * (radius - 20);
+            ctx.fillText(i.toString(), lx - 4, ly + 4);
+        }
+
+        // Draw Needle
+        const needleAngle = Math.PI * 1.25 + (pos / 100) * (Math.PI * 0.5);
+        const nx = cx + Math.cos(needleAngle) * (radius + 5);
+        const ny = cy + Math.sin(needleAngle) * (radius + 5);
+
+        ctx.strokeStyle = "#ef4444";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(nx, ny);
+        ctx.stroke();
+
+        // Pivot
+        ctx.fillStyle = "#334155";
+        ctx.beginPath();
+        ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        document.getElementById('meterReading').textContent = calculateMeterValue(pos, range);
+    }
+
+    function nextMeterQuiz() {
+        currentMeterQuizPos = Math.floor(Math.random() * 80) + 10;
+        const ranges = ['DCV_2.5', 'DCV_10', 'DCV_50', 'DCV_250', 'OHM_x1', 'OHM_x10', 'OHM_x1k'];
+        currentMeterQuizRange = ranges[Math.floor(Math.random() * ranges.length)];
+
+        drawMeter();
+
+        document.getElementById('meterQuizFeedback').textContent = "";
+        const optionsContainer = document.getElementById('meterQuizOptions');
+        optionsContainer.innerHTML = "";
+
+        const correctAns = calculateMeterValue(currentMeterQuizPos, currentMeterQuizRange);
+        let choices = [correctAns];
+
+        while (choices.length < 4) {
+            let dummyPos = currentMeterQuizPos + (Math.floor(Math.random() * 5) - 2) * 10;
+            if (dummyPos < 5) dummyPos = 15;
+            let dummyAns = calculateMeterValue(dummyPos, currentMeterQuizRange);
+            if (!choices.includes(dummyAns)) choices.push(dummyAns);
+        }
+
+        choices.sort(() => Math.random() - 0.5);
+
+        choices.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-opt-btn';
+            btn.textContent = opt;
+            btn.onclick = () => {
+                const fb = document.getElementById('meterQuizFeedback');
+                if (opt === correctAns) {
+                    fb.textContent = i18n[currentLang].correct;
+                    fb.style.color = "var(--accent-green)";
+                } else {
+                    fb.textContent = i18n[currentLang].wrong;
+                    fb.style.color = "#f87171";
+                }
+            };
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    // Init
+    drawCaliper();
+    drawMeter();
+</script>
+
+</body>
+</html>
