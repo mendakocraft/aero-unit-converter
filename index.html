@@ -269,11 +269,13 @@
     <div class="tabs-wrapper">
         <div class="tabs">
             <button class="tab-btn active" id="tab-btn-length" onclick="switchTab(event, 'length')">Length</button>
+            <button class="tab-btn" id="tab-btn-area" onclick="switchTab(event, 'area')">Area</button>
             <button class="tab-btn" id="tab-btn-distance" onclick="switchTab(event, 'distance')">Distance</button>
             <button class="tab-btn" id="tab-btn-torque" onclick="switchTab(event, 'torque')">Torque</button>
             <button class="tab-btn" id="tab-btn-pressure" onclick="switchTab(event, 'pressure')">Pressure</button>
             <button class="tab-btn" id="tab-btn-volume" onclick="switchTab(event, 'volume')">Volume</button>
             <button class="tab-btn" id="tab-btn-weight" onclick="switchTab(event, 'weight')">Weight</button>
+            <button class="tab-btn" id="tab-btn-temp" onclick="switchTab(event, 'temp')">Temp</button>
             <button class="tab-btn" id="tab-btn-speed" onclick="switchTab(event, 'speed')">Speed</button>
             <button class="tab-btn" id="tab-btn-si" onclick="switchTab(event, 'si')">SI Prefix</button>
         </div>
@@ -317,7 +319,32 @@
             </div>
         </div>
 
-        <!-- 2. Distance -->
+        <!-- 2. Area -->
+        <div id="tab-area" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-area">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="areaInput" value="100" oninput="calcArea()">
+                    <select id="areaUnit" onchange="calcArea()">
+                        <option value="sqin">sq in (in²)</option>
+                        <option value="sqft">sq ft (ft²)</option>
+                        <option value="sqmm">sq mm (mm²)</option>
+                        <option value="sqcm">sq cm (cm²)</option>
+                        <option value="sqm">sq m (m²)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">sq in (in²)</span><span class="result-val" id="area-sqin">0</span></div>
+                <div class="result-row"><span class="result-label">sq ft (ft²)</span><span class="result-val" id="area-sqft">0</span></div>
+                <div class="result-row"><span class="result-label">sq mm (mm²)</span><span class="result-val" id="area-sqmm">0</span></div>
+                <div class="result-row"><span class="result-label">sq cm (cm²)</span><span class="result-val" id="area-sqcm">0</span></div>
+                <div class="result-row"><span class="result-label">sq m (m²)</span><span class="result-val" id="area-sqm">0</span></div>
+            </div>
+        </div>
+
+        <!-- 3. Distance -->
         <div id="tab-distance" class="tab-content">
             <div class="input-group">
                 <label id="lbl-input-dist">Enter Value & Unit</label>
@@ -342,7 +369,7 @@
             </div>
         </div>
 
-        <!-- 3. Torque -->
+        <!-- 4. Torque -->
         <div id="tab-torque" class="tab-content">
             <div class="input-group">
                 <label id="lbl-input-torq">Enter Value & Unit</label>
@@ -365,7 +392,7 @@
             </div>
         </div>
 
-        <!-- 4. Pressure -->
+        <!-- 5. Pressure -->
         <div id="tab-pressure" class="tab-content">
             <div class="input-group">
                 <label id="lbl-input-pres">Enter Value & Unit</label>
@@ -388,7 +415,7 @@
             </div>
         </div>
 
-        <!-- 5. Volume -->
+        <!-- 6. Volume -->
         <div id="tab-volume" class="tab-content">
             <div class="input-group">
                 <label id="lbl-input-vol">Enter Value & Unit</label>
@@ -408,12 +435,13 @@
                 <div class="result-row"><span class="result-label">Quart (QT)</span><span class="result-val" id="vol-qt">0</span></div>
                 <div class="result-row"><span class="result-label">Pint (PT)</span><span class="result-val" id="vol-pt">0</span></div>
                 <div class="result-row"><span class="result-label">US Gallon (Gal)</span><span class="result-val" id="vol-gal">0</span></div>
+                <div class="result-row"><span class="result-label" id="lbl-res-drum">55-gal Drum</span><span class="result-val highlight" id="vol-drum">0</span></div>
                 <div class="result-row"><span class="result-label">Liter (L)</span><span class="result-val" id="vol-l">0</span></div>
                 <div class="result-row"><span class="result-label">Milliliter (mL)</span><span class="result-val" id="vol-ml">0</span></div>
             </div>
         </div>
 
-        <!-- 6. Weight -->
+        <!-- 7. Weight -->
         <div id="tab-weight" class="tab-content">
             <div class="input-group">
                 <label id="lbl-input-wt">Enter Value & Unit</label>
@@ -432,7 +460,28 @@
             </div>
         </div>
 
-        <!-- 7. Speed -->
+        <!-- 8. Temperature -->
+        <div id="tab-temp" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-temp">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="tempInput" value="25" oninput="calcTemp()">
+                    <select id="tempUnit" onchange="calcTemp()">
+                        <option value="c">°C (Celsius)</option>
+                        <option value="f">°F (Fahrenheit)</option>
+                        <option value="k">K (Kelvin)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">°C (Celsius)</span><span class="result-val" id="temp-c">0</span></div>
+                <div class="result-row"><span class="result-label">°F (Fahrenheit)</span><span class="result-val" id="temp-f">0</span></div>
+                <div class="result-row"><span class="result-label">K (Kelvin)</span><span class="result-val" id="temp-k">0</span></div>
+            </div>
+        </div>
+
+        <!-- 9. Speed -->
         <div id="tab-speed" class="tab-content">
             <div class="input-group">
                 <label id="lbl-input-spd">Enter Value & Unit</label>
@@ -455,7 +504,7 @@
             </div>
         </div>
 
-        <!-- 8. SI Prefix -->
+        <!-- 10. SI Prefix -->
         <div id="tab-si" class="tab-content">
             <div class="input-group">
                 <label id="lbl-input-si">Enter Value & Base Prefix</label>
@@ -503,11 +552,13 @@
         en: {
             subtitle: "Aviation & Engineering Unit Converter",
             tabLength: "Length",
+            tabArea: "Area",
             tabDistance: "Distance",
             tabTorque: "Torque",
             tabPressure: "Pressure",
             tabVolume: "Volume",
             tabWeight: "Weight",
+            tabTemp: "Temp",
             tabSpeed: "Speed",
             tabSI: "SI Prefix",
             inputValUnit: "Enter Value & Unit",
@@ -519,16 +570,19 @@
             resDec: "Decimal Inch (in)",
             resFrac64: "Nearest 1/64 Fraction",
             resFrac128: "Nearest 1/128 Fraction",
+            resDrum: "55-gal Drum",
             disclaimer: "<strong>Disclaimer:</strong> This tool is provided for reference and educational purposes only. Always verify calculations against official manuals or documentation. The developer assumes no responsibility for any damages or losses resulting from the use of this tool."
         },
         jp: {
             subtitle: "航空・工学向け 単位換算ツール",
             tabLength: "寸法",
+            tabArea: "面積",
             tabDistance: "距離",
             tabTorque: "トルク",
             tabPressure: "圧力",
             tabVolume: "体積",
             tabWeight: "重量",
+            tabTemp: "温度",
             tabSpeed: "速度",
             tabSI: "SI接頭辞",
             inputValUnit: "数値と単位を入力",
@@ -540,6 +594,7 @@
             resDec: "小数インチ (in)",
             resFrac64: "最寄り 1/64 帯分数",
             resFrac128: "最寄り 1/128 帯分数",
+            resDrum: "55ガロンドラム缶",
             disclaimer: "<strong>免責事項:</strong> 本ツールは参考および教育目的で提供されています。実務での使用にあたっては、必ず公式のマニュアルや規程をご確認ください。本ツールの計算結果によって生じた事故や損害について、開発者は一切の責任を負いません。"
         }
     };
@@ -552,20 +607,24 @@
         const t = i18n[lang];
         document.getElementById('i18n-subtitle').textContent = t.subtitle;
         document.getElementById('tab-btn-length').textContent = t.tabLength;
+        document.getElementById('tab-btn-area').textContent = t.tabArea;
         document.getElementById('tab-btn-distance').textContent = t.tabDistance;
         document.getElementById('tab-btn-torque').textContent = t.tabTorque;
         document.getElementById('tab-btn-pressure').textContent = t.tabPressure;
         document.getElementById('tab-btn-volume').textContent = t.tabVolume;
         document.getElementById('tab-btn-weight').textContent = t.tabWeight;
+        document.getElementById('tab-btn-temp').textContent = t.tabTemp;
         document.getElementById('tab-btn-speed').textContent = t.tabSpeed;
         document.getElementById('tab-btn-si').textContent = t.tabSI;
 
         document.getElementById('lbl-input-length').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-area').textContent = t.inputValUnit;
         document.getElementById('lbl-input-dist').textContent = t.inputValUnit;
         document.getElementById('lbl-input-torq').textContent = t.inputValUnit;
         document.getElementById('lbl-input-pres').textContent = t.inputValUnit;
         document.getElementById('lbl-input-vol').textContent = t.inputValUnit;
         document.getElementById('lbl-input-wt').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-temp').textContent = t.inputValUnit;
         document.getElementById('lbl-input-spd').textContent = t.inputValUnit;
         document.getElementById('lbl-input-si').textContent = t.inputValPrefix;
         document.getElementById('lbl-quick-length').textContent = t.quickInch;
@@ -576,6 +635,7 @@
         document.getElementById('lbl-res-dec').textContent = t.resDec;
         document.getElementById('lbl-res-frac64').textContent = t.resFrac64;
         document.getElementById('lbl-res-frac128').textContent = t.resFrac128;
+        document.getElementById('lbl-res-drum').textContent = t.resDrum;
 
         document.getElementById('i18n-disclaimer').innerHTML = t.disclaimer;
     }
@@ -688,7 +748,28 @@
         calcLength();
     }
 
-    // --- 2. Distance ---
+    // --- 2. Area ---
+    function calcArea() {
+        const val = parseFloat(document.getElementById('areaInput').value);
+        const unit = document.getElementById('areaUnit').value;
+
+        if (isNaN(val)) return;
+
+        let sqmm = 0;
+        if (unit === 'sqin') sqmm = val * 645.16;
+        else if (unit === 'sqft') sqmm = val * 92903.04;
+        else if (unit === 'sqmm') sqmm = val;
+        else if (unit === 'sqcm') sqmm = val * 100;
+        else if (unit === 'sqm') sqmm = val * 1000000;
+
+        document.getElementById('area-sqin').textContent = (sqmm / 645.16).toFixed(4) + ' in²';
+        document.getElementById('area-sqft').textContent = (sqmm / 92903.04).toFixed(4) + ' ft²';
+        document.getElementById('area-sqmm').textContent = sqmm.toFixed(2) + ' mm²';
+        document.getElementById('area-sqcm').textContent = (sqmm / 100).toFixed(4) + ' cm²';
+        document.getElementById('area-sqm').textContent = (sqmm / 1000000).toFixed(6) + ' m²';
+    }
+
+    // --- 3. Distance ---
     function calcDistance() {
         const val = parseFloat(document.getElementById('distInput').value);
         const unit = document.getElementById('distUnit').value;
@@ -709,7 +790,7 @@
         document.getElementById('dist-ft').textContent = (m / 0.3048).toFixed(2) + ' ft';
     }
 
-    // --- 3. Torque ---
+    // --- 4. Torque ---
     function calcTorque() {
         const val = parseFloat(document.getElementById('torqInput').value);
         const unit = document.getElementById('torqUnit').value;
@@ -728,7 +809,7 @@
         document.getElementById('torq-kgfcm').textContent = (nm / 0.0980665).toFixed(2) + ' kgf・cm';
     }
 
-    // --- 4. Pressure ---
+    // --- 5. Pressure ---
     function calcPressure() {
         const val = parseFloat(document.getElementById('presInput').value);
         const unit = document.getElementById('presUnit').value;
@@ -747,7 +828,7 @@
         document.getElementById('pres-hpa').textContent = (psi / 0.0145037738).toFixed(1) + ' hPa';
     }
 
-    // --- 5. Volume ---
+    // --- 6. Volume ---
     function calcVolume() {
         const val = parseFloat(document.getElementById('volInput').value);
         const unit = document.getElementById('volUnit').value;
@@ -761,14 +842,18 @@
         else if (unit === 'l') l = val;
         else if (unit === 'ml') l = val / 1000;
 
+        const gal = l / 3.785411784;
+        const drum = gal / 55;
+
         document.getElementById('vol-qt').textContent = (l / 0.946352946).toFixed(3) + ' QT';
         document.getElementById('vol-pt').textContent = (l / 0.473176473).toFixed(3) + ' PT';
-        document.getElementById('vol-gal').textContent = (l / 3.785411784).toFixed(3) + ' Gal';
+        document.getElementById('vol-gal').textContent = gal.toFixed(3) + ' Gal';
+        document.getElementById('vol-drum').textContent = drum.toFixed(3) + ' Drum';
         document.getElementById('vol-l').textContent = l.toFixed(3) + ' L';
         document.getElementById('vol-ml').textContent = (l * 1000).toFixed(1) + ' mL';
     }
 
-    // --- 6. Weight ---
+    // --- 7. Weight ---
     function calcWeight() {
         const val = parseFloat(document.getElementById('wtInput').value);
         const unit = document.getElementById('wtUnit').value;
@@ -783,7 +868,27 @@
         document.getElementById('wt-kg').textContent = kg.toFixed(2) + ' kg';
     }
 
-    // --- 7. Speed ---
+    // --- 8. Temperature ---
+    function calcTemp() {
+        const val = parseFloat(document.getElementById('tempInput').value);
+        const unit = document.getElementById('tempUnit').value;
+
+        if (isNaN(val)) return;
+
+        let c = 0;
+        if (unit === 'c') c = val;
+        else if (unit === 'f') c = (val - 32) * (5 / 9);
+        else if (unit === 'k') c = val - 273.15;
+
+        const f = (c * 9 / 5) + 32;
+        const k = c + 273.15;
+
+        document.getElementById('temp-c').textContent = c.toFixed(2) + ' °C';
+        document.getElementById('temp-f').textContent = f.toFixed(2) + ' °F';
+        document.getElementById('temp-k').textContent = k.toFixed(2) + ' K';
+    }
+
+    // --- 9. Speed ---
     function calcSpeed() {
         const val = parseFloat(document.getElementById('spdInput').value);
         const unit = document.getElementById('spdUnit').value;
@@ -802,7 +907,7 @@
         document.getElementById('spd-mph').textContent = (kmh / 1.609344).toFixed(2) + ' mph';
     }
 
-    // --- 8. SI Prefix ---
+    // --- 10. SI Prefix ---
     function calcSI() {
         const val = parseFloat(document.getElementById('siInput').value);
         const exp = parseInt(document.getElementById('siUnit').value);
@@ -831,11 +936,13 @@
 
     // 初期化実行
     calcLength();
+    calcArea();
     calcDistance();
     calcTorque();
     calcPressure();
     calcVolume();
     calcWeight();
+    calcTemp();
     calcSpeed();
     calcSI();
 </script>
