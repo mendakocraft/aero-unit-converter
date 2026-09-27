@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AUC Training - Vernier Caliper & Multimeter Trainer</title>
+    <title>AeroUnitConverter - Aviation & Engineering Unit Converter</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -60,7 +60,6 @@
             color: var(--text-sub);
         }
 
-        /* ハンバーガーボタン */
         .menu-btn {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -71,7 +70,6 @@
             cursor: pointer;
         }
 
-        /* スライドサイドメニュー */
         .overlay {
             display: none;
             position: fixed;
@@ -168,7 +166,6 @@
             color: var(--bg-color);
         }
 
-        /* モーダル (About用) */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -217,28 +214,37 @@
             width: 100%;
         }
 
+        .tabs-wrapper {
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 16px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tabs-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
         .tabs {
-            display: flex;
+            display: inline-flex;
             gap: 4px;
             background: var(--card-bg);
             padding: 4px;
             border-radius: 12px;
             border: 1px solid var(--border);
-            margin-bottom: 16px;
         }
 
         .tab-btn {
-            flex: 1;
             background: none;
             border: none;
             color: var(--text-sub);
-            padding: 10px 0;
-            font-size: 0.85rem;
+            padding: 8px 12px;
+            font-size: 0.8rem;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s;
-            text-align: center;
+            white-space: nowrap;
         }
 
         .tab-btn.active {
@@ -262,68 +268,69 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
 
-        canvas {
-            background: #ffffff;
-            border-radius: 10px;
-            width: 100%;
-            height: auto;
-            display: block;
-            margin-bottom: 12px;
-        }
-
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .control-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
+        .input-group {
+            margin-bottom: 16px;
         }
 
         label {
+            display: block;
             font-size: 0.85rem;
             color: var(--text-sub);
+            margin-bottom: 6px;
             font-weight: 600;
         }
 
-        input[type="range"] {
+        .input-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        input[type="text"], input[type="number"], select {
             width: 100%;
-            accent-color: var(--accent);
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            background: var(--input-bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: #ffffff;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent);
         }
 
         select {
-            padding: 8px;
             font-size: 0.95rem;
-            font-weight: bold;
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: #fff;
+            cursor: pointer;
         }
 
-        .btn {
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .btn-btn {
             background: var(--btn-bg);
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 10px 14px;
+            padding: 8px 0;
             font-weight: bold;
             font-size: 0.85rem;
             cursor: pointer;
-            width: 100%;
-            margin-top: 6px;
         }
 
-        .btn:active {
+        .btn-btn:active {
             background: var(--btn-active);
         }
 
         .results {
-            margin-top: 14px;
+            margin-top: 16px;
             background: #090d16;
             border-radius: 12px;
             padding: 12px 16px;
@@ -334,8 +341,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 0;
+            padding: 10px 0;
             border-bottom: 1px solid #1e293b;
+            gap: 8px;
         }
 
         .result-row:last-child {
@@ -345,57 +353,20 @@
         .result-label {
             color: var(--text-sub);
             font-size: 0.85rem;
+            white-space: nowrap;
         }
 
         .result-val {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
+            color: var(--accent);
+            text-align: right;
+            word-break: break-all;
+        }
+
+        .result-val.highlight {
             color: var(--accent-green);
-        }
-
-        .quiz-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .quiz-opt-btn {
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .quiz-opt-btn:active {
-            border-color: var(--accent);
-        }
-
-        .mode-toggle {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .mode-btn {
-            flex: 1;
-            padding: 6px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            border: 1px solid var(--border);
-            background: var(--input-bg);
-            color: var(--text-sub);
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .mode-btn.active {
-            background: var(--btn-bg);
-            color: white;
-            border-color: var(--accent);
+            font-size: 0.9rem;
         }
 
         footer {
@@ -411,7 +382,6 @@
 </head>
 <body>
 
-<!-- サイドメニュー ＆ オーバーレイ -->
 <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 <div class="drawer-menu" id="drawerMenu">
     <div class="drawer-header">
@@ -419,8 +389,8 @@
         <button class="drawer-close" onclick="closeMenu()">✕</button>
     </div>
     <div class="drawer-links">
-        <a href="index.html" class="drawer-link">✈️ AeroUnitConverter</a>
-        <a href="trainer.html" class="drawer-link" style="border: 1px solid var(--accent);">🎓 Training Mode</a>
+        <a href="index.html" class="drawer-link" style="border: 1px solid var(--accent);">✈️ AeroUnitConverter</a>
+        <a href="trainer.html" class="drawer-link">🎓 Training Mode</a>
         <div class="drawer-link" onclick="openAbout()">ℹ️ <span id="menu-about">About This Site</span></div>
     </div>
     <div class="lang-switch">
@@ -429,12 +399,11 @@
     </div>
 </div>
 
-<!-- About モーダル -->
 <div class="modal-overlay" id="aboutModal">
     <div class="modal-content">
         <div class="modal-header" id="modal-title">About AeroUnitConverter</div>
         <div class="modal-body" id="modal-body">
-            AeroUnitConverter is a lightweight, offline-ready web application designed for aviation mechanics and engineering professionals. Features include unit conversion, fraction/decimal calculations for damage limit checks, and gauge reading practice.
+            AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion and gauge reading practice.
         </div>
         <button class="modal-close-btn" onclick="closeAbout()">OK</button>
     </div>
@@ -443,101 +412,286 @@
 <div class="container">
     <header>
         <div class="header-title">
-            <h1>🎓 AUC Trainer</h1>
-            <div class="subtitle" id="i18n-subtitle">Vernier Caliper & Meter Reading Practice</div>
+            <h1>✈️ AeroUnitConverter</h1>
+            <div class="subtitle" id="i18n-subtitle">Aviation & Engineering Unit Converter</div>
         </div>
         <button class="menu-btn" onclick="openMenu()">☰</button>
     </header>
 
-    <!-- タブ（ノギス / テスター） -->
-    <div class="tabs">
-        <button class="tab-btn active" id="tab-btn-caliper" onclick="switchTab(event, 'caliper')">1/128" Caliper</button>
-        <button class="tab-btn" id="tab-btn-meter" onclick="switchTab(event, 'meter')">Analog Multimeter</button>
+    <div class="tabs-wrapper">
+        <div class="tabs">
+            <button class="tab-btn active" id="tab-btn-length" onclick="switchTab(event, 'length')">Length</button>
+            <button class="tab-btn" id="tab-btn-area" onclick="switchTab(event, 'area')">Area</button>
+            <button class="tab-btn" id="tab-btn-distance" onclick="switchTab(event, 'distance')">Distance</button>
+            <button class="tab-btn" id="tab-btn-torque" onclick="switchTab(event, 'torque')">Torque</button>
+            <button class="tab-btn" id="tab-btn-pressure" onclick="switchTab(event, 'pressure')">Pressure</button>
+            <button class="tab-btn" id="tab-btn-volume" onclick="switchTab(event, 'volume')">Volume</button>
+            <button class="tab-btn" id="tab-btn-weight" onclick="switchTab(event, 'weight')">Weight</button>
+            <button class="tab-btn" id="tab-btn-temp" onclick="switchTab(event, 'temp')">Temp</button>
+            <button class="tab-btn" id="tab-btn-speed" onclick="switchTab(event, 'speed')">Speed</button>
+            <button class="tab-btn" id="tab-btn-si" onclick="switchTab(event, 'si')">SI Prefix</button>
+        </div>
     </div>
 
     <div class="card">
-        <!-- 1. Vernier Caliper Trainer -->
-        <div id="tab-caliper" class="tab-content active">
-            <div class="mode-toggle">
-                <button class="mode-btn active" id="caliper-mode-practice" onclick="setCaliperMode('practice')">Practice Mode</button>
-                <button class="mode-btn" id="caliper-mode-quiz" onclick="setCaliperMode('quiz')">Quiz Mode</button>
-            </div>
-
-            <canvas id="caliperCanvas" width="440" height="150"></canvas>
-
-            <div id="caliper-practice-controls" class="controls">
-                <div class="control-row">
-                    <label id="lbl-slide-position">Slide Position:</label>
-                    <input type="range" id="caliperRange" min="0" max="128" value="16" oninput="drawCaliper()">
-                </div>
-                <div class="results">
-                    <div class="result-row">
-                        <span class="result-label" id="lbl-reading">Reading:</span>
-                        <span class="result-val" id="caliperReading">-</span>
-                    </div>
-                    <div class="result-row">
-                        <span class="result-label" id="lbl-breakdown">Breakdown:</span>
-                        <span class="result-val" id="caliperBreakdown" style="font-size: 0.85rem; color: var(--accent);">-</span>
-                    </div>
-                </div>
-            </div>
-
-            <div id="caliper-quiz-controls" class="controls" style="display: none;">
-                <button class="btn" onclick="nextCaliperQuiz()" id="btn-next-caliper-quiz">New Question</button>
-                <div class="quiz-options" id="caliperQuizOptions"></div>
-                <div id="caliperQuizFeedback" style="text-align: center; margin-top: 10px; font-weight: bold; min-height: 24px;"></div>
-            </div>
-        </div>
-
-        <!-- 2. Analog Multimeter Trainer -->
-        <div id="tab-meter" class="tab-content">
-            <div class="mode-toggle">
-                <button class="mode-btn active" id="meter-mode-practice" onclick="setMeterMode('practice')">Practice Mode</button>
-                <button class="mode-btn" id="meter-mode-quiz" onclick="setMeterMode('quiz')">Quiz Mode</button>
-            </div>
-
-            <canvas id="meterCanvas" width="440" height="200"></canvas>
-
-            <div id="meter-practice-controls" class="controls">
-                <div class="control-row">
-                    <label id="lbl-range-select">Range Selector:</label>
-                    <select id="meterRangeSelect" onchange="drawMeter()">
-                        <optgroup label="DC Voltage">
-                            <option value="DCV_2.5">DC 2.5V</option>
-                            <option value="DCV_10" selected>DC 10V</option>
-                            <option value="DCV_50">DC 50V</option>
-                            <option value="DCV_250">DC 250V</option>
-                        </optgroup>
-                        <optgroup label="Resistance (Ohms)">
-                            <option value="OHM_x1">Ω ×1</option>
-                            <option value="OHM_x10">Ω ×10</option>
-                            <option value="OHM_x1k">Ω ×1k</option>
-                        </optgroup>
+        <!-- 1. Length -->
+        <div id="tab-length" class="tab-content active">
+            <div class="input-group">
+                <label id="lbl-input-length">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="text" id="lenInput" placeholder="e.g. 1/16 or 2.5" value="1/16" oninput="calcLength()">
+                    <select id="lenUnit" style="width: 120px;" onchange="calcLength()">
+                        <option value="in">in</option>
+                        <option value="mm">mm</option>
+                        <option value="cm">cm</option>
+                        <option value="ft">ft</option>
                     </select>
                 </div>
-                <div class="control-row">
-                    <label id="lbl-needle-pos">Needle Position:</label>
-                    <input type="range" id="meterRange" min="0" max="100" value="50" oninput="drawMeter()">
-                </div>
-                <div class="results">
-                    <div class="result-row">
-                        <span class="result-label" id="lbl-measured-val">Measured Value:</span>
-                        <span class="result-val" id="meterReading">-</span>
-                    </div>
+            </div>
+            
+            <label id="lbl-quick-length">Quick Inch Input</label>
+            <div class="btn-grid">
+                <button class="btn-btn" onclick="setLen('1/64')">1/64</button>
+                <button class="btn-btn" onclick="setLen('1/32')">1/32</button>
+                <button class="btn-btn" onclick="setLen('3/32')">3/32</button>
+                <button class="btn-btn" onclick="setLen('1/16')">1/16</button>
+                <button class="btn-btn" onclick="setLen('1/8')">1/8</button>
+                <button class="btn-btn" onclick="setLen('1/4')">1/4</button>
+                <button class="btn-btn" onclick="setLen('1/2')">1/2</button>
+                <button class="btn-btn" onclick="setLen('3/4')">3/4</button>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label" id="lbl-res-mm">Millimeter (mm)</span><span class="result-val" id="len-mm">0</span></div>
+                <div class="result-row"><span class="result-label" id="lbl-res-cm">Centimeter (cm)</span><span class="result-val" id="len-cm">0</span></div>
+                <div class="result-row"><span class="result-label" id="lbl-res-ft">Feet (ft)</span><span class="result-val" id="len-ft">0</span></div>
+                <div class="result-row"><span class="result-label" id="lbl-res-dec">Decimal Inch (in)</span><span class="result-val" id="len-dec">0</span></div>
+                <div class="result-row"><span class="result-label" id="lbl-res-frac64">Nearest 1/64 Fraction</span><span class="result-val highlight" id="len-frac64">-</span></div>
+                <div class="result-row"><span class="result-label" id="lbl-res-frac128">Nearest 1/128 Fraction</span><span class="result-val highlight" id="len-frac128">-</span></div>
+            </div>
+        </div>
+
+        <!-- 2. Area -->
+        <div id="tab-area" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-area">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="areaInput" value="100" oninput="calcArea()">
+                    <select id="areaUnit" onchange="calcArea()">
+                        <option value="sqin">sq in (in²)</option>
+                        <option value="sqft">sq ft (ft²)</option>
+                        <option value="sqmm">sq mm (mm²)</option>
+                        <option value="sqcm">sq cm (cm²)</option>
+                        <option value="sqm">sq m (m²)</option>
+                    </select>
                 </div>
             </div>
 
-            <div id="meter-quiz-controls" class="controls" style="display: none;">
-                <button class="btn" onclick="nextMeterQuiz()" id="btn-next-meter-quiz">New Question</button>
-                <div class="quiz-options" id="meterQuizOptions"></div>
-                <div id="meterQuizFeedback" style="text-align: center; margin-top: 10px; font-weight: bold; min-height: 24px;"></div>
+            <div class="results">
+                <div class="result-row"><span class="result-label">sq in (in²)</span><span class="result-val" id="area-sqin">0</span></div>
+                <div class="result-row"><span class="result-label">sq ft (ft²)</span><span class="result-val" id="area-sqft">0</span></div>
+                <div class="result-row"><span class="result-label">sq mm (mm²)</span><span class="result-val" id="area-sqmm">0</span></div>
+                <div class="result-row"><span class="result-label">sq cm (cm²)</span><span class="result-val" id="area-sqcm">0</span></div>
+                <div class="result-row"><span class="result-label">sq m (m²)</span><span class="result-val" id="area-sqm">0</span></div>
             </div>
         </div>
+
+        <!-- 3. Distance -->
+        <div id="tab-distance" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-dist">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="distInput" value="10" oninput="calcDistance()">
+                    <select id="distUnit" onchange="calcDistance()">
+                        <option value="NM">NM (Nautical Mile)</option>
+                        <option value="km">km</option>
+                        <option value="m">m</option>
+                        <option value="yd">yd (Yard)</option>
+                        <option value="ft">ft (Feet)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">NM (Nautical Mile)</span><span class="result-val" id="dist-nm">0</span></div>
+                <div class="result-row"><span class="result-label">km (Kilometer)</span><span class="result-val" id="dist-km">0</span></div>
+                <div class="result-row"><span class="result-label">m (Meter)</span><span class="result-val" id="dist-m">0</span></div>
+                <div class="result-row"><span class="result-label">yd (Yard)</span><span class="result-val" id="dist-yd">0</span></div>
+                <div class="result-row"><span class="result-label">ft (Feet)</span><span class="result-val" id="dist-ft">0</span></div>
+            </div>
+        </div>
+
+        <!-- 4. Torque -->
+        <div id="tab-torque" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-torq">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="torqInput" value="100" oninput="calcTorque()">
+                    <select id="torqUnit" onchange="calcTorque()">
+                        <option value="in-lb">in-lb</option>
+                        <option value="ft-lb">ft-lb</option>
+                        <option value="Nm">N・m</option>
+                        <option value="kgfcm">kgf・cm</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">in-lb (Inch Pound)</span><span class="result-val" id="torq-inlb">0</span></div>
+                <div class="result-row"><span class="result-label">ft-lb (Foot Pound)</span><span class="result-val" id="torq-ftlb">0</span></div>
+                <div class="result-row"><span class="result-label">N・m (Newton Meter)</span><span class="result-val" id="torq-nm">0</span></div>
+                <div class="result-row"><span class="result-label">kgf・cm (Kilogram-force cm)</span><span class="result-val" id="torq-kgfcm">0</span></div>
+            </div>
+        </div>
+
+        <!-- 5. Pressure -->
+        <div id="tab-pressure" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-pres">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="presInput" value="50" oninput="calcPressure()">
+                    <select id="presUnit" onchange="calcPressure()">
+                        <option value="psi">PSI</option>
+                        <option value="bar">bar</option>
+                        <option value="inhg">inHg</option>
+                        <option value="hpa">hPa / mbar</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">PSI (Pounds per sq inch)</span><span class="result-val" id="pres-psi">0</span></div>
+                <div class="result-row"><span class="result-label">bar</span><span class="result-val" id="pres-bar">0</span></div>
+                <div class="result-row"><span class="result-label">inHg (Inches of mercury)</span><span class="result-val" id="pres-inhg">0</span></div>
+                <div class="result-row"><span class="result-label">hPa / mbar (Hectopascal)</span><span class="result-val" id="pres-hpa">0</span></div>
+            </div>
+        </div>
+
+        <!-- 6. Volume -->
+        <div id="tab-volume" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-vol">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="volInput" value="1" oninput="calcVolume()">
+                    <select id="volUnit" onchange="calcVolume()">
+                        <option value="qt">Quart (QT)</option>
+                        <option value="pt">Pint (PT)</option>
+                        <option value="gal">US Gallon</option>
+                        <option value="l">Liter (L)</option>
+                        <option value="ml">mL</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">Quart (QT)</span><span class="result-val" id="vol-qt">0</span></div>
+                <div class="result-row"><span class="result-label">Pint (PT)</span><span class="result-val" id="vol-pt">0</span></div>
+                <div class="result-row"><span class="result-label">US Gallon (Gal)</span><span class="result-val" id="vol-gal">0</span></div>
+                <div class="result-row"><span class="result-label" id="lbl-res-drum">55-gal Drum</span><span class="result-val highlight" id="vol-drum">0</span></div>
+                <div class="result-row"><span class="result-label">Liter (L)</span><span class="result-val" id="vol-l">0</span></div>
+                <div class="result-row"><span class="result-label">Milliliter (mL)</span><span class="result-val" id="vol-ml">0</span></div>
+            </div>
+        </div>
+
+        <!-- 7. Weight -->
+        <div id="tab-weight" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-wt">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="wtInput" value="100" oninput="calcWeight()">
+                    <select id="wtUnit" onchange="calcWeight()">
+                        <option value="lbs">lbs (Pounds)</option>
+                        <option value="kg">kg (Kilograms)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">lbs (Pounds)</span><span class="result-val" id="wt-lbs">0</span></div>
+                <div class="result-row"><span class="result-label">kg (Kilograms)</span><span class="result-val" id="wt-kg">0</span></div>
+            </div>
+        </div>
+
+        <!-- 8. Temperature -->
+        <div id="tab-temp" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-temp">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="tempInput" value="25" oninput="calcTemp()">
+                    <select id="tempUnit" onchange="calcTemp()">
+                        <option value="c">°C (Celsius)</option>
+                        <option value="f">°F (Fahrenheit)</option>
+                        <option value="k">K (Kelvin)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">°C (Celsius)</span><span class="result-val" id="temp-c">0</span></div>
+                <div class="result-row"><span class="result-label">°F (Fahrenheit)</span><span class="result-val" id="temp-f">0</span></div>
+                <div class="result-row"><span class="result-label">K (Kelvin)</span><span class="result-val" id="temp-k">0</span></div>
+            </div>
+        </div>
+
+        <!-- 9. Speed -->
+        <div id="tab-speed" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-spd">Enter Value & Unit</label>
+                <div class="input-row">
+                    <input type="number" id="spdInput" value="10" oninput="calcSpeed()">
+                    <select id="spdUnit" onchange="calcSpeed()">
+                        <option value="kt">kt (Knot)</option>
+                        <option value="ms">m/s</option>
+                        <option value="kmh">km/h</option>
+                        <option value="mph">mph</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">kt (Knot)</span><span class="result-val" id="spd-kt">0</span></div>
+                <div class="result-row"><span class="result-label">m/s (Meter per second)</span><span class="result-val" id="spd-ms">0</span></div>
+                <div class="result-row"><span class="result-label">km/h (Kilometer per hour)</span><span class="result-val" id="spd-kmh">0</span></div>
+                <div class="result-row"><span class="result-label">mph (Miles per hour)</span><span class="result-val" id="spd-mph">0</span></div>
+            </div>
+        </div>
+
+        <!-- 10. SI Prefix -->
+        <div id="tab-si" class="tab-content">
+            <div class="input-group">
+                <label id="lbl-input-si">Enter Value & Base Prefix</label>
+                <div class="input-row">
+                    <input type="number" id="siInput" value="1" oninput="calcSI()">
+                    <select id="siUnit" onchange="calcSI()">
+                        <option value="9">G (Giga / 10⁹)</option>
+                        <option value="6">M (Mega / 10⁶)</option>
+                        <option value="3">k (Kilo / 10³)</option>
+                        <option value="0" selected>base (Base / 10⁰)</option>
+                        <option value="-2">c (Centi / 10⁻²)</option>
+                        <option value="-3">m (Milli / 10⁻³)</option>
+                        <option value="-6">μ (Micro / 10⁻⁶)</option>
+                        <option value="-9">n (Nano / 10⁻⁹)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="result-row"><span class="result-label">Giga (G) [10⁹]</span><span class="result-val" id="si-G">0</span></div>
+                <div class="result-row"><span class="result-label">Mega (M) [10⁶]</span><span class="result-val" id="si-M">0</span></div>
+                <div class="result-row"><span class="result-label">Kilo (k) [10³]</span><span class="result-val" id="si-k">0</span></div>
+                <div class="result-row"><span class="result-label">Base [10⁰]</span><span class="result-val" id="si-base">0</span></div>
+                <div class="result-row"><span class="result-label">Centi (c) [10⁻²]</span><span class="result-val" id="si-c">0</span></div>
+                <div class="result-row"><span class="result-label">Milli (m) [10⁻³]</span><span class="result-val" id="si-m">0</span></div>
+                <div class="result-row"><span class="result-label">Micro (μ) [10⁻⁶]</span><span class="result-val" id="si-u">0</span></div>
+                <div class="result-row"><span class="result-label">Nano (n) [10⁻⁹]</span><span class="result-val" id="si-n">0</span></div>
+            </div>
+        </div>
+
     </div>
 
     <footer>
         <p id="i18n-disclaimer">
-            <strong>Disclaimer:</strong> This training tool is for reference and educational practice only. Always consult official aircraft/equipment maintenance manuals.
+            <strong>Disclaimer:</strong> This tool is provided for reference and educational purposes only. Always verify calculations against official manuals or documentation. The developer assumes no responsibility for any damages or losses resulting from the use of this tool.
         </p>
     </footer>
 </div>
@@ -547,48 +701,61 @@
 
     const i18n = {
         en: {
-            subtitle: "Vernier Caliper & Meter Reading Practice",
-            tabCaliper: "1/128\" Caliper",
-            tabMeter: "Analog Multimeter",
-            modePractice: "Practice Mode",
-            modeQuiz: "Quiz Mode",
-            slidePos: "Slide Position:",
-            reading: "Reading:",
-            breakdown: "Breakdown:",
-            rangeSelect: "Range Selector:",
-            needlePos: "Needle Position:",
-            measuredVal: "Measured Value:",
-            newQuestion: "New Question",
-            correct: "✨ Correct!",
-            wrong: "❌ Try Again!",
+            subtitle: "Aviation & Engineering Unit Converter",
+            tabLength: "Length",
+            tabArea: "Area",
+            tabDistance: "Distance",
+            tabTorque: "Torque",
+            tabPressure: "Pressure",
+            tabVolume: "Volume",
+            tabWeight: "Weight",
+            tabTemp: "Temp",
+            tabSpeed: "Speed",
+            tabSI: "SI Prefix",
+            inputValUnit: "Enter Value & Unit",
+            inputValPrefix: "Enter Value & Base Prefix",
+            quickInch: "Quick Inch Input",
+            resMm: "Millimeter (mm)",
+            resCm: "Centimeter (cm)",
+            resFt: "Feet (ft)",
+            resDec: "Decimal Inch (in)",
+            resFrac64: "Nearest 1/64 Fraction",
+            resFrac128: "Nearest 1/128 Fraction",
+            resDrum: "55-gal Drum",
             menuAbout: "About This Site",
             aboutTitle: "About AeroUnitConverter",
-            aboutBody: "AeroUnitConverter is a lightweight, offline-ready web application designed for aviation mechanics and engineering professionals. Features include unit conversion, fraction/decimal calculations for damage limit checks, and gauge reading practice.",
-            disclaimer: "<strong>Disclaimer:</strong> This training tool is for reference and educational practice only. Always consult official aircraft/equipment maintenance manuals."
+            aboutBody: "AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion and gauge reading practice.",
+            disclaimer: "<strong>Disclaimer:</strong> This tool is provided for reference and educational purposes only. Always verify calculations against official manuals or documentation. The developer assumes no responsibility for any damages or losses resulting from the use of this tool."
         },
         jp: {
-            subtitle: "バーニアノギス・アナログテスター 読み方トレーニング",
-            tabCaliper: "1/128\" ノギス",
-            tabMeter: "アナログマルチテスター",
-            modePractice: "練習モード",
-            modeQuiz: "クイズモード",
-            slidePos: "スライド位置:",
-            reading: "測定値:",
-            breakdown: "内訳:",
-            rangeSelect: "測定レンジ:",
-            needlePos: "針の位置:",
-            measuredVal: "測定値:",
-            newQuestion: "次の問題",
-            correct: "正解です！✨",
-            wrong: "不正解！もう一度考えよう❌",
+            subtitle: "航空・工学向け 単位換算ツール",
+            tabLength: "寸法",
+            tabArea: "面積",
+            tabDistance: "距離",
+            tabTorque: "トルク",
+            tabPressure: "圧力",
+            tabVolume: "体積",
+            tabWeight: "重量",
+            tabTemp: "温度",
+            tabSpeed: "速度",
+            tabSI: "SI接頭辞",
+            inputValUnit: "数値と単位を入力",
+            inputValPrefix: "数値と基準接頭辞を選択",
+            quickInch: "インチワンタップ入力",
+            resMm: "ミリメートル (mm)",
+            resCm: "センチメートル (cm)",
+            resFt: "フィート (ft)",
+            resDec: "小数インチ (in)",
+            resFrac64: "最寄り 1/64 帯分数",
+            resFrac128: "最寄り 1/128 帯分数",
+            resDrum: "55ガロンドラム缶",
             menuAbout: "このサイトについて",
             aboutTitle: "AeroUnitConverter について",
-            aboutBody: "AeroUnitConverter は、航空ファンやエンジニア向けに開発された軽量・オフライン対応の単位換算ウェブツールです。各種単位換算をはじめ、Dent/Scratch判定用の分数インチ誤差計算や、実務で役立つトレーニング機能を備えています。",
-            disclaimer: "<strong>免責事項:</strong> 本トレーニングツールは練習および教育目的のみで提供されています。実務では必ず公式のマニュアルをご確認ください。"
+            aboutBody: "AeroUnitConverter は、航空ファンやエンジニア向けに開発された軽量・オフライン対応の単位換算ウェブツールです。各種単位換算をはじめ、実務で役立つトレーニング機能を備えています。",
+            disclaimer: "<strong>免責事項:</strong> 本ツールは参考および教育目的で提供されています。実務での使用にあたっては、必ず公式のマニュアルや規程をご確認ください。本ツールの計算結果によって生じた事故や損害について、開発者は一切の責任を負いません。"
         }
     };
 
-    /* メニュー開閉 */
     function openMenu() {
         document.getElementById('drawerMenu').classList.add('open');
         document.getElementById('overlay').style.display = 'block';
@@ -599,7 +766,6 @@
         document.getElementById('overlay').style.display = 'none';
     }
 
-    /* About モーダル開閉 */
     function openAbout() {
         closeMenu();
         document.getElementById('aboutModal').style.display = 'flex';
@@ -616,32 +782,42 @@
 
         const t = i18n[lang];
         document.getElementById('i18n-subtitle').textContent = t.subtitle;
-        document.getElementById('tab-btn-caliper').textContent = t.tabCaliper;
-        document.getElementById('tab-btn-meter').textContent = t.tabMeter;
-        
-        document.getElementById('caliper-mode-practice').textContent = t.modePractice;
-        document.getElementById('caliper-mode-quiz').textContent = t.modeQuiz;
-        document.getElementById('meter-mode-practice').textContent = t.modePractice;
-        document.getElementById('meter-mode-quiz').textContent = t.modeQuiz;
+        document.getElementById('tab-btn-length').textContent = t.tabLength;
+        document.getElementById('tab-btn-area').textContent = t.tabArea;
+        document.getElementById('tab-btn-distance').textContent = t.tabDistance;
+        document.getElementById('tab-btn-torque').textContent = t.tabTorque;
+        document.getElementById('tab-btn-pressure').textContent = t.tabPressure;
+        document.getElementById('tab-btn-volume').textContent = t.tabVolume;
+        document.getElementById('tab-btn-weight').textContent = t.tabWeight;
+        document.getElementById('tab-btn-temp').textContent = t.tabTemp;
+        document.getElementById('tab-btn-speed').textContent = t.tabSpeed;
+        document.getElementById('tab-btn-si').textContent = t.tabSI;
 
-        document.getElementById('lbl-slide-position').textContent = t.slidePos;
-        document.getElementById('lbl-reading').textContent = t.reading;
-        document.getElementById('lbl-breakdown').textContent = t.breakdown;
-        document.getElementById('lbl-range-select').textContent = t.rangeSelect;
-        document.getElementById('lbl-needle-pos').textContent = t.needlePos;
-        document.getElementById('lbl-measured-val').textContent = t.measuredVal;
+        document.getElementById('lbl-input-length').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-area').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-dist').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-torq').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-pres').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-vol').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-wt').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-temp').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-spd').textContent = t.inputValUnit;
+        document.getElementById('lbl-input-si').textContent = t.inputValPrefix;
+        document.getElementById('lbl-quick-length').textContent = t.quickInch;
 
-        document.getElementById('btn-next-caliper-quiz').textContent = t.newQuestion;
-        document.getElementById('btn-next-meter-quiz').textContent = t.newQuestion;
+        document.getElementById('lbl-res-mm').textContent = t.resMm;
+        document.getElementById('lbl-res-cm').textContent = t.resCm;
+        document.getElementById('lbl-res-ft').textContent = t.resFt;
+        document.getElementById('lbl-res-dec').textContent = t.resDec;
+        document.getElementById('lbl-res-frac64').textContent = t.resFrac64;
+        document.getElementById('lbl-res-frac128').textContent = t.resFrac128;
+        document.getElementById('lbl-res-drum').textContent = t.resDrum;
 
         document.getElementById('menu-about').textContent = t.menuAbout;
         document.getElementById('modal-title').textContent = t.aboutTitle;
         document.getElementById('modal-body').textContent = t.aboutBody;
 
         document.getElementById('i18n-disclaimer').innerHTML = t.disclaimer;
-
-        drawCaliper();
-        drawMeter();
     }
 
     function switchTab(evt, tabName) {
@@ -650,306 +826,294 @@
         
         evt.target.classList.add('active');
         document.getElementById('tab-' + tabName).classList.add('active');
-
-        if(tabName === 'caliper') drawCaliper();
-        if(tabName === 'meter') drawMeter();
     }
 
     function gcd(a, b) {
         return b === 0 ? a : gcd(b, a % b);
     }
 
-    // ==========================================
-    // 1. Vernier Caliper Logic & Canvas
-    // ==========================================
-    let caliperMode = 'practice';
-    let currentCaliperQuizVal = 0;
+    function formatMixedFractionAndDiff(inchVal, denominator) {
+        if (isNaN(inchVal)) return '-';
 
-    function setCaliperMode(mode) {
-        caliperMode = mode;
-        document.getElementById('caliper-mode-practice').classList.toggle('active', mode === 'practice');
-        document.getElementById('caliper-mode-quiz').classList.toggle('active', mode === 'quiz');
-        
-        document.getElementById('caliper-practice-controls').style.display = mode === 'practice' ? 'flex' : 'none';
-        document.getElementById('caliper-quiz-controls').style.display = mode === 'quiz' ? 'flex' : 'none';
+        const isNegative = inchVal < 0;
+        const absVal = Math.abs(inchVal);
 
-        if (mode === 'quiz') nextCaliperQuiz();
-        else drawCaliper();
+        const totalSteps = Math.round(absVal * denominator);
+        const whole = Math.floor(totalSteps / denominator);
+        const rem = totalSteps % denominator;
+
+        let fracStr = "";
+        if (rem === 0) {
+            fracStr = whole === 0 ? "0 in" : `${whole} in`;
+        } else {
+            const g = gcd(rem, denominator);
+            const num = rem / g;
+            const den = denominator / g;
+            fracStr = whole > 0 ? `${whole} ${num}/${den} in` : `${num}/${den} in`;
+        }
+
+        if (isNegative && (whole > 0 || rem > 0)) {
+            fracStr = "-" + fracStr;
+        }
+
+        const nearestInch = (isNegative ? -1 : 1) * (totalSteps / denominator);
+        const diffInch = inchVal - nearestInch;
+        const diffMm = diffInch * 25.4;
+
+        const signMm = diffMm >= 0 ? '+' : '';
+        const signIn = diffInch >= 0 ? '+' : '';
+
+        return `${fracStr} (${signMm}${diffMm.toFixed(3)}mm / ${signIn}${diffInch.toFixed(4)}in)`;
     }
 
-    function getFractionText(val128) {
-        if (val128 === 0) return '0 in';
-        const whole = Math.floor(val128 / 128);
-        const rem = val128 % 128;
+    function calcLength() {
+        const str = document.getElementById('lenInput').value.trim();
+        const unit = document.getElementById('lenUnit').value;
+        let inch = 0;
 
-        if (rem === 0) return `${whole} in`;
+        if (!str) {
+            document.getElementById('len-mm').textContent = '-';
+            document.getElementById('len-cm').textContent = '-';
+            document.getElementById('len-ft').textContent = '-';
+            document.getElementById('len-dec').textContent = '-';
+            document.getElementById('len-frac64').textContent = '-';
+            document.getElementById('len-frac128').textContent = '-';
+            return;
+        }
 
-        const g = gcd(rem, 128);
-        const num = rem / g;
-        const den = 128 / g;
-
-        return whole > 0 ? `${whole} ${num}/${den} in` : `${num}/${den} in`;
-    }
-
-    function drawCaliper() {
-        const canvas = document.getElementById('caliperCanvas');
-        const ctx = canvas.getContext('2d');
-        const steps = caliperMode === 'quiz' ? currentCaliperQuizVal : parseInt(document.getElementById('caliperRange').value);
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Background
-        ctx.fillStyle = "#e2e8f0";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        const startX = 30;
-        const mainScaleY = 50;
-        const ppx = 2.4;
-
-        // Draw Main Scale
-        ctx.strokeStyle = "#0f172a";
-        ctx.fillStyle = "#0f172a";
-        ctx.lineWidth = 1.5;
-        ctx.font = "10px sans-serif";
-
-        for (let i = 0; i <= 16; i++) {
-            const x = startX + (i * 8) * ppx;
-            const isInch = i % 16 === 0;
-            const isHalf = i % 8 === 0;
-            const isQuarter = i % 4 === 0;
-
-            let h = 12;
-            if (isInch) h = 25;
-            else if (isHalf) h = 20;
-            else if (isQuarter) h = 16;
-
-            ctx.beginPath();
-            ctx.moveTo(x, mainScaleY);
-            ctx.lineTo(x, mainScaleY - h);
-            ctx.stroke();
-
-            if (i % 4 === 0) {
-                const label = i === 0 ? "0" : (i === 16 ? "1\"" : `${i/4}/4`);
-                ctx.fillText(label, x - 6, mainScaleY - h - 4);
+        if (unit === 'in') {
+            if (str.includes('/')) {
+                const p = str.split('/');
+                if (p.length === 2 && parseFloat(p[1]) !== 0) {
+                    inch = parseFloat(p[0]) / parseFloat(p[1]);
+                }
+            } else {
+                inch = parseFloat(str);
             }
+        } else if (unit === 'mm') {
+            inch = parseFloat(str) / 25.4;
+        } else if (unit === 'cm') {
+            inch = (parseFloat(str) * 10) / 25.4;
+        } else if (unit === 'ft') {
+            inch = parseFloat(str) * 12;
         }
 
-        // Draw Vernier Scale
-        const vernierX = startX + steps * ppx;
-        const vernierY = mainScaleY;
-
-        ctx.fillStyle = "#cbd5e1";
-        ctx.fillRect(vernierX - 10, vernierY, 8 * 7 * ppx + 20, 60);
-        ctx.strokeRect(vernierX - 10, vernierY, 8 * 7 * ppx + 20, 60);
-
-        ctx.fillStyle = "#0284c7";
-        ctx.strokeStyle = "#0284c7";
-        ctx.lineWidth = 1.5;
-
-        const mainStep16 = Math.floor(steps / 8);
-        const vernierMatch = steps % 8;
-
-        for (let j = 0; j <= 8; j++) {
-            const vx = vernierX + (j * 7) * ppx;
-            ctx.beginPath();
-            ctx.moveTo(vx, vernierY);
-            ctx.lineTo(vx, vernierY + 18);
-            ctx.stroke();
-
-            ctx.fillText(j.toString(), vx - 3, vernierY + 32);
+        if (isNaN(inch)) {
+            document.getElementById('len-mm').textContent = 'Error';
+            document.getElementById('len-cm').textContent = 'Error';
+            document.getElementById('len-ft').textContent = 'Error';
+            document.getElementById('len-dec').textContent = 'Error';
+            document.getElementById('len-frac64').textContent = 'Error';
+            document.getElementById('len-frac128').textContent = 'Error';
+            return;
         }
 
-        // Breakdown Info
-        const mainPart = `${mainStep16}/16"`;
-        const vernierPart = `${vernierMatch}/128"`;
-        const totalFrac = getFractionText(steps);
+        const mm = inch * 25.4;
+        const cm = mm / 10;
+        const ft = inch / 12;
 
-        document.getElementById('caliperReading').textContent = totalFrac;
-        document.getElementById('caliperBreakdown').textContent = `${mainPart} + ${vernierPart}`;
+        document.getElementById('len-mm').textContent = mm.toFixed(4) + ' mm';
+        document.getElementById('len-cm').textContent = cm.toFixed(4) + ' cm';
+        document.getElementById('len-ft').textContent = ft.toFixed(4) + ' ft';
+        document.getElementById('len-dec').textContent = inch.toFixed(4) + ' in';
+
+        document.getElementById('len-frac64').textContent = formatMixedFractionAndDiff(inch, 64);
+        document.getElementById('len-frac128').textContent = formatMixedFractionAndDiff(inch, 128);
     }
 
-    function nextCaliperQuiz() {
-        currentCaliperQuizVal = Math.floor(Math.random() * 96) + 8;
-        drawCaliper();
+    function setLen(val) {
+        document.getElementById('lenUnit').value = 'in';
+        document.getElementById('lenInput').value = val;
+        calcLength();
+    }
 
-        document.getElementById('caliperQuizFeedback').textContent = "";
-        const optionsContainer = document.getElementById('caliperQuizOptions');
-        optionsContainer.innerHTML = "";
+    function calcArea() {
+        const val = parseFloat(document.getElementById('areaInput').value);
+        const unit = document.getElementById('areaUnit').value;
 
-        const correctAns = getFractionText(currentCaliperQuizVal);
-        let choices = [correctAns];
+        if (isNaN(val)) return;
 
-        while (choices.length < 4) {
-            let dummyVal = currentCaliperQuizVal + (Math.floor(Math.random() * 7) - 3) * 2;
-            if (dummyVal < 0) dummyVal = 4;
-            let dummyAns = getFractionText(dummyVal);
-            if (!choices.includes(dummyAns)) choices.push(dummyAns);
+        let sqmm = 0;
+        if (unit === 'sqin') sqmm = val * 645.16;
+        else if (unit === 'sqft') sqmm = val * 92903.04;
+        else if (unit === 'sqmm') sqmm = val;
+        else if (unit === 'sqcm') sqmm = val * 100;
+        else if (unit === 'sqm') sqmm = val * 1000000;
+
+        document.getElementById('area-sqin').textContent = (sqmm / 645.16).toFixed(4) + ' in²';
+        document.getElementById('area-sqft').textContent = (sqmm / 92903.04).toFixed(4) + ' ft²';
+        document.getElementById('area-sqmm').textContent = sqmm.toFixed(2) + ' mm²';
+        document.getElementById('area-sqcm').textContent = (sqmm / 100).toFixed(4) + ' cm²';
+        document.getElementById('area-sqm').textContent = (sqmm / 1000000).toFixed(6) + ' m²';
+    }
+
+    function calcDistance() {
+        const val = parseFloat(document.getElementById('distInput').value);
+        const unit = document.getElementById('distUnit').value;
+
+        if (isNaN(val)) return;
+
+        let m = 0;
+        if (unit === 'NM') m = val * 1852;
+        else if (unit === 'km') m = val * 1000;
+        else if (unit === 'm') m = val;
+        else if (unit === 'yd') m = val * 0.9144;
+        else if (unit === 'ft') m = val * 0.3048;
+
+        document.getElementById('dist-nm').textContent = (m / 1852).toFixed(4) + ' NM';
+        document.getElementById('dist-km').textContent = (m / 1000).toFixed(4) + ' km';
+        document.getElementById('dist-m').textContent = m.toFixed(2) + ' m';
+        document.getElementById('dist-yd').textContent = (m / 0.9144).toFixed(2) + ' yd';
+        document.getElementById('dist-ft').textContent = (m / 0.3048).toFixed(2) + ' ft';
+    }
+
+    function calcTorque() {
+        const val = parseFloat(document.getElementById('torqInput').value);
+        const unit = document.getElementById('torqUnit').value;
+
+        if (isNaN(val)) return;
+
+        let nm = 0;
+        if (unit === 'in-lb') nm = val * 0.112984829;
+        else if (unit === 'ft-lb') nm = val * 1.35581795;
+        else if (unit === 'Nm') nm = val;
+        else if (unit === 'kgfcm') nm = val * 0.0980665;
+
+        document.getElementById('torq-inlb').textContent = (nm / 0.112984829).toFixed(2) + ' in-lb';
+        document.getElementById('torq-ftlb').textContent = (nm / 1.35581795).toFixed(2) + ' ft-lb';
+        document.getElementById('torq-nm').textContent = nm.toFixed(2) + ' N・m';
+        document.getElementById('torq-kgfcm').textContent = (nm / 0.0980665).toFixed(2) + ' kgf・cm';
+    }
+
+    function calcPressure() {
+        const val = parseFloat(document.getElementById('presInput').value);
+        const unit = document.getElementById('presUnit').value;
+
+        if (isNaN(val)) return;
+
+        let psi = 0;
+        if (unit === 'psi') psi = val;
+        else if (unit === 'bar') psi = val * 14.5037738;
+        else if (unit === 'inhg') psi = val * 0.491154077;
+        else if (unit === 'hpa') psi = val * 0.0145037738;
+
+        document.getElementById('pres-psi').textContent = psi.toFixed(2) + ' PSI';
+        document.getElementById('pres-bar').textContent = (psi / 14.5037738).toFixed(3) + ' bar';
+        document.getElementById('pres-inhg').textContent = (psi / 0.491154077).toFixed(2) + ' inHg';
+        document.getElementById('pres-hpa').textContent = (psi / 0.0145037738).toFixed(1) + ' hPa';
+    }
+
+    function calcVolume() {
+        const val = parseFloat(document.getElementById('volInput').value);
+        const unit = document.getElementById('volUnit').value;
+
+        if (isNaN(val)) return;
+
+        let l = 0;
+        if (unit === 'qt') l = val * 0.946352946;
+        else if (unit === 'pt') l = val * 0.473176473;
+        else if (unit === 'gal') l = val * 3.785411784;
+        else if (unit === 'l') l = val;
+        else if (unit === 'ml') l = val / 1000;
+
+        const gal = l / 3.785411784;
+        const drum = gal / 55;
+
+        document.getElementById('vol-qt').textContent = (l / 0.946352946).toFixed(3) + ' QT';
+        document.getElementById('vol-pt').textContent = (l / 0.473176473).toFixed(3) + ' PT';
+        document.getElementById('vol-gal').textContent = gal.toFixed(3) + ' Gal';
+        document.getElementById('vol-drum').textContent = drum.toFixed(3) + ' Drum';
+        document.getElementById('vol-l').textContent = l.toFixed(3) + ' L';
+        document.getElementById('vol-ml').textContent = (l * 1000).toFixed(1) + ' mL';
+    }
+
+    function calcWeight() {
+        const val = parseFloat(document.getElementById('wtInput').value);
+        const unit = document.getElementById('wtUnit').value;
+
+        if (isNaN(val)) return;
+
+        let kg = 0;
+        if (unit === 'lbs') kg = val * 0.45359237;
+        else if (unit === 'kg') kg = val;
+
+        document.getElementById('wt-lbs').textContent = (kg / 0.45359237).toFixed(2) + ' lbs';
+        document.getElementById('wt-kg').textContent = kg.toFixed(2) + ' kg';
+    }
+
+    function calcTemp() {
+        const val = parseFloat(document.getElementById('tempInput').value);
+        const unit = document.getElementById('tempUnit').value;
+
+        if (isNaN(val)) return;
+
+        let c = 0;
+        if (unit === 'c') c = val;
+        else if (unit === 'f') c = (val - 32) * (5 / 9);
+        else if (unit === 'k') c = val - 273.15;
+
+        const f = (c * 9 / 5) + 32;
+        const k = c + 273.15;
+
+        document.getElementById('temp-c').textContent = c.toFixed(2) + ' °C';
+        document.getElementById('temp-f').textContent = f.toFixed(2) + ' °F';
+        document.getElementById('temp-k').textContent = k.toFixed(2) + ' K';
+    }
+
+    function calcSpeed() {
+        const val = parseFloat(document.getElementById('spdInput').value);
+        const unit = document.getElementById('spdUnit').value;
+
+        if (isNaN(val)) return;
+
+        let kmh = 0;
+        if (unit === 'kt') kmh = val * 1.852;
+        else if (unit === 'ms') kmh = val * 3.6;
+        else if (unit === 'kmh') kmh = val;
+        else if (unit === 'mph') kmh = val * 1.609344;
+
+        document.getElementById('spd-kt').textContent = (kmh / 1.852).toFixed(2) + ' kt';
+        document.getElementById('spd-ms').textContent = (kmh / 3.6).toFixed(2) + ' m/s';
+        document.getElementById('spd-kmh').textContent = kmh.toFixed(2) + ' km/h';
+        document.getElementById('spd-mph').textContent = (kmh / 1.609344).toFixed(2) + ' mph';
+    }
+
+    function calcSI() {
+        const val = parseFloat(document.getElementById('siInput').value);
+        const exp = parseInt(document.getElementById('siUnit').value);
+
+        if (isNaN(val)) return;
+
+        const baseVal = val * Math.pow(10, exp);
+
+        function formatNum(num) {
+            if (num === 0) return '0';
+            if (Math.abs(num) >= 1e6 || Math.abs(num) < 1e-4) {
+                return num.toExponential(4);
+            }
+            return Number(num.toFixed(6)).toString();
         }
 
-        choices.sort(() => Math.random() - 0.5);
-
-        choices.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'quiz-opt-btn';
-            btn.textContent = opt;
-            btn.onclick = () => {
-                const fb = document.getElementById('caliperQuizFeedback');
-                if (opt === correctAns) {
-                    fb.textContent = i18n[currentLang].correct;
-                    fb.style.color = "var(--accent-green)";
-                } else {
-                    fb.textContent = i18n[currentLang].wrong;
-                    fb.style.color = "#f87171";
-                }
-            };
-            optionsContainer.appendChild(btn);
-        });
+        document.getElementById('si-G').textContent = formatNum(baseVal / 1e9);
+        document.getElementById('si-M').textContent = formatNum(baseVal / 1e6);
+        document.getElementById('si-k').textContent = formatNum(baseVal / 1e3);
+        document.getElementById('si-base').textContent = formatNum(baseVal);
+        document.getElementById('si-c').textContent = formatNum(baseVal / 1e-2);
+        document.getElementById('si-m').textContent = formatNum(baseVal / 1e-3);
+        document.getElementById('si-u').textContent = formatNum(baseVal / 1e-6);
+        document.getElementById('si-n').textContent = formatNum(baseVal / 1e-9);
     }
 
-    // ==========================================
-    // 2. Analog Multimeter Logic & Canvas
-    // ==========================================
-    let meterMode = 'practice';
-    let currentMeterQuizPos = 50;
-    let currentMeterQuizRange = 'DCV_10';
-
-    function setMeterMode(mode) {
-        meterMode = mode;
-        document.getElementById('meter-mode-practice').classList.toggle('active', mode === 'practice');
-        document.getElementById('meter-mode-quiz').classList.toggle('active', mode === 'quiz');
-
-        document.getElementById('meter-practice-controls').style.display = mode === 'practice' ? 'flex' : 'none';
-        document.getElementById('meter-quiz-controls').style.display = mode === 'quiz' ? 'flex' : 'none';
-
-        if (mode === 'quiz') nextMeterQuiz();
-        else drawMeter();
-    }
-
-    function calculateMeterValue(posPercent, rangeKey) {
-        if (rangeKey.startsWith('DCV_')) {
-            const maxVal = parseFloat(rangeKey.replace('DCV_', ''));
-            return (posPercent / 100 * maxVal).toFixed(2) + " V";
-        } else if (rangeKey.startsWith('OHM_')) {
-            const mult = rangeKey === 'OHM_x1' ? 1 : (rangeKey === 'OHM_x10' ? 10 : 1000);
-            if (posPercent > 98) return "0 Ω";
-            if (posPercent < 2) return "∞ Ω";
-
-            const rawOhm = Math.pow((100 - posPercent) / 10, 2.2);
-            const val = Math.round(rawOhm * mult);
-            return val >= 1000 ? (val / 1000).toFixed(1) + " kΩ" : val + " Ω";
-        }
-        return "-";
-    }
-
-    function drawMeter() {
-        const canvas = document.getElementById('meterCanvas');
-        const ctx = canvas.getContext('2d');
-        const pos = meterMode === 'quiz' ? currentMeterQuizPos : parseInt(document.getElementById('meterRange').value);
-        const range = meterMode === 'quiz' ? currentMeterQuizRange : document.getElementById('meterRangeSelect').value;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Arc Background
-        ctx.fillStyle = "#f8fafc";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        const cx = canvas.width / 2;
-        const cy = 230;
-        const radius = 170;
-
-        // Draw Scales
-        ctx.lineWidth = 2;
-
-        ctx.strokeStyle = "#0f172a";
-        ctx.beginPath();
-        ctx.arc(cx, cy, radius, Math.PI * 1.25, Math.PI * 1.75);
-        ctx.stroke();
-
-        ctx.font = "10px sans-serif";
-        ctx.fillStyle = "#0f172a";
-
-        for (let i = 0; i <= 10; i++) {
-            const angle = Math.PI * 1.25 + (i / 10) * (Math.PI * 0.5);
-            const tx1 = cx + Math.cos(angle) * radius;
-            const ty1 = cy + Math.sin(angle) * radius;
-            const tx2 = cx + Math.cos(angle) * (radius - 10);
-            const ty2 = cy + Math.sin(angle) * (radius - 10);
-
-            ctx.beginPath();
-            ctx.moveTo(tx1, ty1);
-            ctx.lineTo(tx2, ty2);
-            ctx.stroke();
-
-            const lx = cx + Math.cos(angle) * (radius - 20);
-            const ly = cy + Math.sin(angle) * (radius - 20);
-            ctx.fillText(i.toString(), lx - 4, ly + 4);
-        }
-
-        // Draw Needle
-        const needleAngle = Math.PI * 1.25 + (pos / 100) * (Math.PI * 0.5);
-        const nx = cx + Math.cos(needleAngle) * (radius + 5);
-        const ny = cy + Math.sin(needleAngle) * (radius + 5);
-
-        ctx.strokeStyle = "#ef4444";
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(nx, ny);
-        ctx.stroke();
-
-        // Pivot
-        ctx.fillStyle = "#334155";
-        ctx.beginPath();
-        ctx.arc(cx, cy, 8, 0, Math.PI * 2);
-        ctx.fill();
-
-        document.getElementById('meterReading').textContent = calculateMeterValue(pos, range);
-    }
-
-    function nextMeterQuiz() {
-        currentMeterQuizPos = Math.floor(Math.random() * 80) + 10;
-        const ranges = ['DCV_2.5', 'DCV_10', 'DCV_50', 'DCV_250', 'OHM_x1', 'OHM_x10', 'OHM_x1k'];
-        currentMeterQuizRange = ranges[Math.floor(Math.random() * ranges.length)];
-
-        drawMeter();
-
-        document.getElementById('meterQuizFeedback').textContent = "";
-        const optionsContainer = document.getElementById('meterQuizOptions');
-        optionsContainer.innerHTML = "";
-
-        const correctAns = calculateMeterValue(currentMeterQuizPos, currentMeterQuizRange);
-        let choices = [correctAns];
-
-        while (choices.length < 4) {
-            let dummyPos = currentMeterQuizPos + (Math.floor(Math.random() * 5) - 2) * 10;
-            if (dummyPos < 5) dummyPos = 15;
-            let dummyAns = calculateMeterValue(dummyPos, currentMeterQuizRange);
-            if (!choices.includes(dummyAns)) choices.push(dummyAns);
-        }
-
-        choices.sort(() => Math.random() - 0.5);
-
-        choices.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'quiz-opt-btn';
-            btn.textContent = opt;
-            btn.onclick = () => {
-                const fb = document.getElementById('meterQuizFeedback');
-                if (opt === correctAns) {
-                    fb.textContent = i18n[currentLang].correct;
-                    fb.style.color = "var(--accent-green)";
-                } else {
-                    fb.textContent = i18n[currentLang].wrong;
-                    fb.style.color = "#f87171";
-                }
-            };
-            optionsContainer.appendChild(btn);
-        });
-    }
-
-    // Init
-    drawCaliper();
-    drawMeter();
+    calcLength();
+    calcArea();
+    calcDistance();
+    calcTorque();
+    calcPressure();
+    calcVolume();
+    calcWeight();
+    calcTemp();
+    calcSpeed();
+    calcSI();
 </script>
 
 </body>
