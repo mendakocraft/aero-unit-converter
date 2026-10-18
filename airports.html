@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1Z0REVFHH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-Z1Z0REVFHH');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airport Codes Master - AeroUnitConverter</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --input-bg: #334155;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --accent: #38bdf8;
+            --accent-green: #4ade80;
+            --btn-bg: #0284c7;
+            --btn-active: #0369a1;
+            --border: #475569;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .header-title h1 {
+            font-size: 1.3rem;
+            margin: 0;
+            color: var(--accent);
+        }
+
+        .header-title .subtitle {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        .menu-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-size: 1.2rem;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 90;
+        }
+
+        .drawer-menu {
+            position: fixed;
+            top: 0; right: -280px;
+            width: 250px; height: 100%;
+            background: var(--card-bg);
+            border-left: 1px solid var(--border);
+            box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+            z-index: 100;
+            transition: right 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .drawer-menu.open {
+            right: 0;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .drawer-close {
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .drawer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .drawer-link {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 8px;
+            background: var(--input-bg);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .drawer-link:active {
+            border-color: var(--accent);
+        }
+
+        .lang-switch {
+            display: flex;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2px;
+            margin-top: auto;
+        }
+
+        .lang-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            padding: 6px 0;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .lang-btn.active {
+            background: var(--accent);
+            color: var(--bg-color);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 110;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .modal-body {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin-bottom: 16px;
+        }
+
+        .modal-close-btn {
+            background: var(--btn-bg);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--card-bg);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            padding: 10px 0;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: var(--bg-color);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        label {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"], select {
+            padding: 10px;
+            width: 100%;
+            font-size: 0.95rem;
+            font-weight: bold;
+            background: var(--input-bg);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: var(--accent);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        /* クイズ出題カード */
+        .quiz-question-box {
+            background: #090d16;
+            border: 2px solid var(--accent);
+            border-radius: 14px;
+            padding: 20px 16px;
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .quiz-q-prompt {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .quiz-q-code {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent);
+            letter-spacing: 2px;
+            line-height: 1.1;
+        }
+
+        .quiz-q-subcode {
+            font-size: 0.95rem;
+            color: var(--accent-green);
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quiz-opt-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 0.92rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.15s;
+            line-height: 1.35;
+        }
+
+        .quiz-opt-btn:active {
+            border-color: var(--accent);
+            background: #475569;
+        }
+
+        .quiz-opt-main {
+            display: block;
+            color: #ffffff;
+            font-size: 0.95rem;
+        }
+
+        .quiz-opt-sub {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+
+        .quiz-feedback {
+            text-align: center;
+            margin-top: 12px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            min-height: 24px;
+        }
+
+        .score-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #090d16;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            color: var(--text-sub);
+        }
+
+        .score-bar strong {
+            color: var(--accent-green);
+        }
+
+        .btn {
+            background: var(--btn-bg);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:active {
+            background: var(--btn-active);
+        }
+
+        /* 検索テーブル */
+        .search-stats {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-top: 6px;
+            margin-bottom: 10px;
+        }
+
+        .airport-list-container {
+            max-height: 440px;
+            overflow-y: auto;
+            overflow-x: auto;
+            background: #090d16;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .airport-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .airport-table th {
+            background: #1e293b;
+            color: var(--accent);
+            padding: 10px 8px;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .airport-table td {
+            padding: 9px 8px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .airport-table tr:hover {
+            background: #1e293b;
+        }
+
+        .badge-type {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        .badge-type.large {
+            background: #0369a1;
+            color: #bae6fd;
+        }
+
+        footer {
+            margin-top: 24px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 0.72rem;
+            color: #64748b;
+            line-height: 1.4;
+            padding: 0 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<div class="drawer-menu" id="drawerMenu">
+    <div class="drawer-header">
+        <strong style="color: var(--accent);">Navigation</strong>
+        <button class="drawer-close" onclick="closeMenu()">✕</button>
+    </div>
+    <div class="drawer-links">
+        <a href="index.html" class="drawer-link">✈️ AeroUnitConverter</a>
+        <a href="trainer.html" class="drawer-link">🎓 Training Mode</a>
+        <a href="airports.html" class="drawer-link" style="border: 1px solid var(--accent);">🗺️ Airport Codes</a>
+        <div class="drawer-link" onclick="openAbout()">ℹ️ <span id="menu-about">About This Site</span></div>
+    </div>
+    <div class="lang-switch">
+        <button class="lang-btn active" id="btn-en" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" id="btn-jp" onclick="setLanguage('jp')">JP</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="aboutModal">
+    <div class="modal-content">
+        <div class="modal-header" id="modal-title">About AeroUnitConverter</div>
+        <div class="modal-body" id="modal-body">
+            AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion, gauge reading practice, and global airport code training.
+        </div>
+        <button class="modal-close-btn" onclick="closeAbout()">OK</button>
+    </div>
+</div>
+
+<div class="container">
+    <header>
+        <div class="header-title">
+            <h1>🗺️ Airport Codes Master</h1>
+            <div class="subtitle" id="i18n-subtitle">World Medium & Large Airport Code Trainer</div>
+        </div>
+        <button class="menu-btn" onclick="openMenu()">☰</button>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" id="tab-btn-quiz" onclick="switchView('quiz')">🎯 Code Quiz</button>
+        <button class="tab-btn" id="tab-btn-search" onclick="switchView('search')">🔍 Global Search</button>
+    </div>
+
+    <!-- 1. クイズモード -->
+    <div id="view-quiz" class="card">
+        <div class="filter-row">
+            <div>
+                <label id="lbl-quiz-scope">Scope (出題範囲):</label>
+                <select id="quizScope" onchange="nextQuestion()">
+                    <option value="japan" selected>Japan (国内 90空港)</option>
+                    <option value="large">Major Hubs (世界の大型 1,176)</option>
+                    <option value="all">All World (中・大型 4,563)</option>
+                </select>
+            </div>
+            <div>
+                <label id="lbl-quiz-format">Prompt (出題コード):</label>
+                <select id="quizFormat" onchange="nextQuestion()">
+                    <option value="both" selected>IATA & ICAO (HND / RJTT)</option>
+                    <option value="iata">IATA Only (HND)</option>
+                    <option value="icao">ICAO Only (RJTT)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="score-bar">
+            <span>Streak: <strong id="scoreStreak">0</strong></span>
+            <span>Total: <strong id="scoreTotal">0</strong></span>
+            <span>Accuracy: <strong id="scoreAcc">0%</strong></span>
+        </div>
+
+        <div class="quiz-question-box">
+            <div class="quiz-q-prompt" id="quiz-prompt-text">WHICH AIRPORT HAS THIS CODE?</div>
+            <div class="quiz-q-code" id="quiz-target-code">---</div>
+            <div class="quiz-q-subcode" id="quiz-target-subcode"></div>
+        </div>
+
+        <div class="quiz-options" id="quizOptionsContainer"></div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+
+        <button class="btn" onclick="nextQuestion()" id="btn-next">Next Question ➔</button>
+    </div>
+
+    <!-- 2. 全世界検索モード -->
+    <div id="view-search" class="card" style="display: none;">
+        <label id="lbl-search-input">Search Airports (4,563 Medium & Large):</label>
+        <input type="text" id="searchInput" placeholder="Search by IATA, ICAO, City, Country, or Name..." oninput="handleSearch()">
+        <div class="search-stats" id="searchStats">Type to search...</div>
+
+        <div class="airport-list-container">
+            <table class="airport-table">
+                <thead>
+                    <tr>
+                        <th>IATA</th>
+                        <th>ICAO</th>
+                        <th id="th-airport">Airport Name</th>
+                        <th id="th-city">City</th>
+                        <th id="th-country">Country</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody id="airportTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <p id="i18n-disclaimer">
+            <strong>Disclaimer:</strong> Airport database is based on OurAirports public records for educational and training purposes only.
+        </p>
+    </footer>
+</div>
+
+<script>
+    let currentLang = 'en';
+    let currentView = 'quiz';
+    let allAirports = [];
+    let currentTarget = null;
+
+    let statCorrect = 0;
+    let statTotal = 0;
+    let statStreak = 0;
+
+    const i18n = {
+        en: {
+            subtitle: "World Medium & Large Airport Code Trainer",
+            tabQuiz: "🎯 Code Quiz",
+            tabSearch: "🔍 Global Search",
+            lblScope: "Scope:",
+            lblFormat: "Prompt:",
+            lblSearchInput: "Search Airports (4,563 Medium & Large):",
+            promptText: "WHICH AIRPORT HAS THIS CODE?",
+            btnNext: "Next Question ➔",
+            thAirport: "Airport Name",
+            thCity: "City",
+            thCountry: "Country",
+            correct: "✨ Correct!",
+            wrong: "❌ Wrong! Correct answer: ",
+            loading: "Loading database...",
+            menuAbout: "About This Site",
+            aboutTitle: "About AeroUnitConverter",
+            aboutBody: "AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion, gauge reading practice, and global airport code training.",
+            disclaimer: "<strong>Disclaimer:</strong> Airport database is based on OurAirports public records for educational and training purposes only."
+        },
+        jp: {
+            subtitle: "世界の中・大型空港コード トレーニング",
+            tabQuiz: "🎯 コード当てクイズ",
+            tabSearch: "🔍 全世界空港検索",
+            lblScope: "出題範囲:",
+            lblFormat: "出題形式:",
+            lblSearchInput: "空港検索（中・大型 4,563空港）:",
+            promptText: "このコードの空港・都市はどこ？",
+            btnNext: "次の問題 ➔",
+            thAirport: "空港名",
+            thCity: "地名 / 都市",
+            thCountry: "国",
+            correct: "✨ 正解！お見事！",
+            wrong: "❌ 不正解！正解は：",
+            loading: "データベース読み込み中...",
+            menuAbout: "このサイトについて",
+            aboutTitle: "AeroUnitConverter について",
+            aboutBody: "AeroUnitConverter は、航空ファンやエンジニア向けに開発された軽量・オフライン対応の単位換算ウェブツールです。各種単位換算をはじめ、実務で役立つトレーニング機能を備えています。",
+            disclaimer: "<strong>免責事項:</strong> 本ツールの空港データはOurAirportsの公開記録に基づき、教育・訓練目的で提供されています。"
+        }
+    };
+
+    function openMenu() {
+        document.getElementById('drawerMenu').classList.add('open');
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeMenu() {
+        document.getElementById('drawerMenu').classList.remove('open');
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    function openAbout() {
+        closeMenu();
+        document.getElementById('aboutModal').style.display = 'flex';
+    }
+
+    function closeAbout() {
+        document.getElementById('aboutModal').style.display = 'none';
+    }
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        document.getElementById('btn-jp').classList.toggle('active', lang === 'jp');
+
+        const t = i18n[lang];
+        document.getElementById('i18n-subtitle').textContent = t.subtitle;
+        document.getElementById('tab-btn-quiz').textContent = t.tabQuiz;
+        document.getElementById('tab-btn-search').textContent = t.tabSearch;
+        document.getElementById('lbl-quiz-scope').textContent = t.lblScope;
+        document.getElementById('lbl-quiz-format').textContent = t.lblFormat;
+        document.getElementById('lbl-search-input').textContent = t.lblSearchInput;
+        document.getElementById('quiz-prompt-text').textContent = t.promptText;
+        document.getElementById('btn-next').textContent = t.btnNext;
+        document.getElementById('th-airport').textContent = t.thAirport;
+        document.getElementById('th-city').textContent = t.thCity;
+        document.getElementById('th-country').textContent = t.thCountry;
+
+        document.getElementById('menu-about').textContent = t.menuAbout;
+        document.getElementById('modal-title').textContent = t.aboutTitle;
+        document.getElementById('modal-body').textContent = t.aboutBody;
+        document.getElementById('i18n-disclaimer').innerHTML = t.disclaimer;
+
+        if (currentView === 'search') handleSearch();
+    }
+
+    function switchView(view) {
+        currentView = view;
+        document.getElementById('tab-btn-quiz').classList.toggle('active', view === 'quiz');
+        document.getElementById('tab-btn-search').classList.toggle('active', view === 'search');
+        document.getElementById('view-quiz').style.display = view === 'quiz' ? 'block' : 'none';
+        document.getElementById('view-search').style.display = view === 'search' ? 'block' : 'none';
+
+        if (view === 'search') handleSearch();
+    }
+
+    // データベースの非同期ロード（キャッシュ＆オフライン対応）
+    async function loadDatabase() {
+        try {
+            const res = await fetch('airports.json');
+            allAirports = await res.json();
+            nextQuestion();
+        } catch (e) {
+            console.error('Failed to load airports.json', e);
+            document.getElementById('quiz-target-code').textContent = "Error";
+            document.getElementById('quiz-prompt-text').textContent = "Please place airports.json in the same folder.";
+        }
+    }
+
+    function getFilteredPool() {
+        const scope = document.getElementById('quizScope').value;
+        if (scope === 'japan') {
+            return allAirports.filter(a => a.country === 'Japan');
+        } else if (scope === 'large') {
+            return allAirports.filter(a => a.type === 'large_airport');
+        }
+        return allAirports;
+    }
+
+    function nextQuestion() {
+        if (!allAirports || allAirports.length === 0) return;
+
+        const pool = getFilteredPool();
+        currentTarget = pool[Math.floor(Math.random() * pool.length)];
+
+        const format = document.getElementById('quizFormat').value;
+        const codeEl = document.getElementById('quiz-target-code');
+        const subEl = document.getElementById('quiz-target-subcode');
+
+        if (format === 'both') {
+            codeEl.textContent = currentTarget.iata;
+            subEl.textContent = `ICAO: ${currentTarget.icao}`;
+        } else if (format === 'iata') {
+            codeEl.textContent = currentTarget.iata;
+            subEl.textContent = "";
+        } else {
+            codeEl.textContent = currentTarget.icao;
+            subEl.textContent = "";
+        }
+
+        document.getElementById('quizFeedback').textContent = "";
+
+        // 4択生成
+        let choices = [currentTarget];
+        while (choices.length < 4) {
+            const randItem = pool[Math.floor(Math.random() * pool.length)];
+            if (!choices.some(c => c.iata === randItem.iata)) {
+                choices.push(randItem);
+            }
+        }
+        choices.sort(() => Math.random() - 0.5);
+
+        const container = document.getElementById('quizOptionsContainer');
+        container.innerHTML = "";
+
+        choices.forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-opt-btn';
+
+            const cityStr = item.city ? `${item.city}, ` : '';
+            btn.innerHTML = `
+                <span class="quiz-opt-main">${item.name}</span>
+                <span class="quiz-opt-sub">📍 ${cityStr}${item.country}</span>
+            `;
+
+            btn.onclick = () => handleAnswer(item, btn);
+            container.appendChild(btn);
+        });
+    }
+
+    function handleAnswer(selectedItem, clickedBtn) {
+        const fb = document.getElementById('quizFeedback');
+        const allBtns = document.querySelectorAll('.quiz-opt-btn');
+        allBtns.forEach(b => b.disabled = true);
+
+        statTotal++;
+
+        if (selectedItem.iata === currentTarget.iata) {
+            statCorrect++;
+            statStreak++;
+            fb.textContent = i18n[currentLang].correct;
+            fb.style.color = "var(--accent-green)";
+            clickedBtn.style.border = "2px solid var(--accent-green)";
+            clickedBtn.style.background = "#064e3b";
+        } else {
+            statStreak = 0;
+            const ansCity = currentTarget.city ? `${currentTarget.city}, ` : '';
+            fb.textContent = `${i18n[currentLang].wrong} ${currentTarget.name} (${ansCity}${currentTarget.country})`;
+            fb.style.color = "#f87171";
+            clickedBtn.style.border = "2px solid #ef4444";
+            clickedBtn.style.background = "#450a0a";
+
+            // 正解のボタンをハイライト
+            allBtns.forEach(b => {
+                if (b.innerText.includes(currentTarget.name)) {
+                    b.style.border = "2px solid var(--accent-green)";
+                }
+            });
+        }
+
+        document.getElementById('scoreStreak').textContent = statStreak;
+        document.getElementById('scoreTotal').textContent = `${statCorrect}/${statTotal}`;
+        document.getElementById('scoreAcc').textContent = `${Math.round((statCorrect / statTotal) * 100)}%`;
+    }
+
+    // 全世界リアルタイム検索
+    function handleSearch() {
+        const query = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+        const tbody = document.getElementById('airportTableBody');
+        tbody.innerHTML = '';
+
+        if (!allAirports || allAirports.length === 0) return;
+
+        let matches = [];
+        if (!query) {
+            matches = allAirports.slice(0, 80); // 初期表示80件
+            document.getElementById('searchStats').textContent = `Showing 80 of ${allAirports.length.toLocaleString()} airports (type to search)`;
+        } else {
+            matches = allAirports.filter(a => {
+                return a.iata.toLowerCase().includes(query) ||
+                       a.icao.toLowerCase().includes(query) ||
+                       a.name.toLowerCase().includes(query) ||
+                       a.city.toLowerCase().includes(query) ||
+                       a.country.toLowerCase().includes(query);
+            });
+            document.getElementById('searchStats').textContent = `Found ${matches.length.toLocaleString()} airports`;
+            matches = matches.slice(0, 100); // 最大100件まで高速レンダリング
+        }
+
+        matches.forEach(item => {
+            const row = document.createElement('tr');
+            const typeClass = item.type === 'large_airport' ? 'badge-type large' : 'badge-type';
+            const typeLabel = item.type === 'large_airport' ? 'Large' : 'Medium';
+            row.innerHTML = `
+                <td style="font-weight: bold; color: var(--accent);">${item.iata}</td>
+                <td style="color: var(--accent-green); font-family: monospace;">${item.icao}</td>
+                <td>${item.name}</td>
+                <td>${item.city || '-'}</td>
+                <td style="color: var(--text-sub);">${item.country}</td>
+                <td><span class="${typeClass}">${typeLabel}</span></td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // 初期化実行
+    loadDatabase();
+</script>
+
+</body>
+</html>
