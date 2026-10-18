@@ -40,6 +40,8 @@
         .container {
             width: 100%;
             max-width: 480px;
+            position: relative;
+            z-index: 1;
         }
 
         header {
@@ -70,6 +72,7 @@
             cursor: pointer;
         }
 
+        /* 背景オーバーレイ（クリック遮断バグ防止設定済み） */
         .overlay {
             display: none;
             position: fixed;
@@ -77,8 +80,15 @@
             width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6);
             z-index: 90;
+            pointer-events: none;
         }
 
+        .overlay.active {
+            display: block;
+            pointer-events: auto;
+        }
+
+        /* スライドサイドメニュー */
         .drawer-menu {
             position: fixed;
             top: 0; right: -280px;
@@ -93,10 +103,12 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+            pointer-events: none;
         }
 
         .drawer-menu.open {
             right: 0;
+            pointer-events: auto;
         }
 
         .drawer-header {
@@ -166,6 +178,7 @@
             color: var(--bg-color);
         }
 
+        /* About用モーダル（非表示時はクリックを絶対に拾わない） */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -177,6 +190,12 @@
             align-items: center;
             padding: 16px;
             box-sizing: border-box;
+            pointer-events: none;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            pointer-events: auto;
         }
 
         .modal-content {
@@ -382,7 +401,10 @@
 </head>
 <body>
 
-<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<!-- メニュー背景オーバーレイ（styleで確実に非表示） -->
+<div class="overlay" id="overlay" style="display: none;" onclick="closeMenu()"></div>
+
+<!-- スライドサイドメニュー -->
 <div class="drawer-menu" id="drawerMenu">
     <div class="drawer-header">
         <strong style="color: var(--accent);">Navigation</strong>
@@ -400,7 +422,8 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="aboutModal">
+<!-- About モーダル（styleで確実に非表示） -->
+<div class="modal-overlay" id="aboutModal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header" id="modal-title">About AeroUnitConverter</div>
         <div class="modal-body" id="modal-body">
@@ -690,6 +713,7 @@
 
     </div>
 
+    <!-- 免責事項フッター -->
     <footer>
         <p id="i18n-disclaimer">
             <strong>Disclaimer:</strong> This tool is provided for reference and educational purposes only. Always verify calculations against official manuals or documentation. The developer assumes no responsibility for any damages or losses resulting from the use of this tool.
@@ -757,23 +781,33 @@
         }
     };
 
+    /* メニュー開閉 */
     function openMenu() {
         document.getElementById('drawerMenu').classList.add('open');
-        document.getElementById('overlay').style.display = 'block';
+        const ov = document.getElementById('overlay');
+        ov.style.display = 'block';
+        ov.classList.add('active');
     }
 
     function closeMenu() {
         document.getElementById('drawerMenu').classList.remove('open');
-        document.getElementById('overlay').style.display = 'none';
+        const ov = document.getElementById('overlay');
+        ov.style.display = 'none';
+        ov.classList.remove('active');
     }
 
+    /* About モーダル開閉 */
     function openAbout() {
         closeMenu();
-        document.getElementById('aboutModal').style.display = 'flex';
+        const modal = document.getElementById('aboutModal');
+        modal.style.display = 'flex';
+        modal.classList.add('active');
     }
 
     function closeAbout() {
-        document.getElementById('aboutModal').style.display = 'none';
+        const modal = document.getElementById('aboutModal');
+        modal.style.display = 'none';
+        modal.classList.remove('active');
     }
 
     function setLanguage(lang) {
@@ -867,6 +901,7 @@
         return `${fracStr} (${signMm}${diffMm.toFixed(3)}mm / ${signIn}${diffInch.toFixed(4)}in)`;
     }
 
+    // --- 1. Length ---
     function calcLength() {
         const str = document.getElementById('lenInput').value.trim();
         const unit = document.getElementById('lenUnit').value;
@@ -928,6 +963,7 @@
         calcLength();
     }
 
+    // --- 2. Area ---
     function calcArea() {
         const val = parseFloat(document.getElementById('areaInput').value);
         const unit = document.getElementById('areaUnit').value;
@@ -948,6 +984,7 @@
         document.getElementById('area-sqm').textContent = (sqmm / 1000000).toFixed(6) + ' m²';
     }
 
+    // --- 3. Distance ---
     function calcDistance() {
         const val = parseFloat(document.getElementById('distInput').value);
         const unit = document.getElementById('distUnit').value;
@@ -968,6 +1005,7 @@
         document.getElementById('dist-ft').textContent = (m / 0.3048).toFixed(2) + ' ft';
     }
 
+    // --- 4. Torque ---
     function calcTorque() {
         const val = parseFloat(document.getElementById('torqInput').value);
         const unit = document.getElementById('torqUnit').value;
@@ -986,6 +1024,7 @@
         document.getElementById('torq-kgfcm').textContent = (nm / 0.0980665).toFixed(2) + ' kgf・cm';
     }
 
+    // --- 5. Pressure ---
     function calcPressure() {
         const val = parseFloat(document.getElementById('presInput').value);
         const unit = document.getElementById('presUnit').value;
@@ -1004,6 +1043,7 @@
         document.getElementById('pres-hpa').textContent = (psi / 0.0145037738).toFixed(1) + ' hPa';
     }
 
+    // --- 6. Volume ---
     function calcVolume() {
         const val = parseFloat(document.getElementById('volInput').value);
         const unit = document.getElementById('volUnit').value;
@@ -1022,4 +1062,105 @@
 
         document.getElementById('vol-qt').textContent = (l / 0.946352946).toFixed(3) + ' QT';
         document.getElementById('vol-pt').textContent = (l / 0.473176473).toFixed(3) + ' PT';
-        document.getElementById('vol-gal').textContent = gal.toFixed
+        document.getElementById('vol-gal').textContent = gal.toFixed(3) + ' Gal';
+        document.getElementById('vol-drum').textContent = drum.toFixed(3) + ' Drum';
+        document.getElementById('vol-l').textContent = l.toFixed(3) + ' L';
+        document.getElementById('vol-ml').textContent = (l * 1000).toFixed(1) + ' mL';
+    }
+
+    // --- 7. Weight ---
+    function calcWeight() {
+        const val = parseFloat(document.getElementById('wtInput').value);
+        const unit = document.getElementById('wtUnit').value;
+
+        if (isNaN(val)) return;
+
+        let kg = 0;
+        if (unit === 'lbs') kg = val * 0.45359237;
+        else if (unit === 'kg') kg = val;
+
+        document.getElementById('wt-lbs').textContent = (kg / 0.45359237).toFixed(2) + ' lbs';
+        document.getElementById('wt-kg').textContent = kg.toFixed(2) + ' kg';
+    }
+
+    // --- 8. Temperature ---
+    function calcTemp() {
+        const val = parseFloat(document.getElementById('tempInput').value);
+        const unit = document.getElementById('tempUnit').value;
+
+        if (isNaN(val)) return;
+
+        let c = 0;
+        if (unit === 'c') c = val;
+        else if (unit === 'f') c = (val - 32) * (5 / 9);
+        else if (unit === 'k') c = val - 273.15;
+
+        const f = (c * 9 / 5) + 32;
+        const k = c + 273.15;
+
+        document.getElementById('temp-c').textContent = c.toFixed(2) + ' °C';
+        document.getElementById('temp-f').textContent = f.toFixed(2) + ' °F';
+        document.getElementById('temp-k').textContent = k.toFixed(2) + ' K';
+    }
+
+    // --- 9. Speed ---
+    function calcSpeed() {
+        const val = parseFloat(document.getElementById('spdInput').value);
+        const unit = document.getElementById('spdUnit').value;
+
+        if (isNaN(val)) return;
+
+        let kmh = 0;
+        if (unit === 'kt') kmh = val * 1.852;
+        else if (unit === 'ms') kmh = val * 3.6;
+        else if (unit === 'kmh') kmh = val;
+        else if (unit === 'mph') kmh = val * 1.609344;
+
+        document.getElementById('spd-kt').textContent = (kmh / 1.852).toFixed(2) + ' kt';
+        document.getElementById('spd-ms').textContent = (kmh / 3.6).toFixed(2) + ' m/s';
+        document.getElementById('spd-kmh').textContent = kmh.toFixed(2) + ' km/h';
+        document.getElementById('spd-mph').textContent = (kmh / 1.609344).toFixed(2) + ' mph';
+    }
+
+    // --- 10. SI Prefix ---
+    function calcSI() {
+        const val = parseFloat(document.getElementById('siInput').value);
+        const exp = parseInt(document.getElementById('siUnit').value);
+
+        if (isNaN(val)) return;
+
+        const baseVal = val * Math.pow(10, exp);
+
+        function formatNum(num) {
+            if (num === 0) return '0';
+            if (Math.abs(num) >= 1e6 || Math.abs(num) < 1e-4) {
+                return num.toExponential(4);
+            }
+            return Number(num.toFixed(6)).toString();
+        }
+
+        document.getElementById('si-G').textContent = formatNum(baseVal / 1e9);
+        document.getElementById('si-M').textContent = formatNum(baseVal / 1e6);
+        document.getElementById('si-k').textContent = formatNum(baseVal / 1e3);
+        document.getElementById('si-base').textContent = formatNum(baseVal);
+        document.getElementById('si-c').textContent = formatNum(baseVal / 1e-2);
+        document.getElementById('si-m').textContent = formatNum(baseVal / 1e-3);
+        document.getElementById('si-u').textContent = formatNum(baseVal / 1e-6);
+        document.getElementById('si-n').textContent = formatNum(baseVal / 1e-9);
+    }
+
+    // 初期化実行
+    calcLength();
+    calcArea();
+    calcDistance();
+    calcTorque();
+    calcPressure();
+    calcVolume();
+    calcWeight();
+    calcTemp();
+    calcSpeed();
+    calcSI();
+</script>
+
+</body>
+</html>
