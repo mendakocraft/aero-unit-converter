@@ -391,6 +391,7 @@
     <div class="drawer-links">
         <a href="index.html" class="drawer-link" style="border: 1px solid var(--accent);">✈️ AeroUnitConverter</a>
         <a href="trainer.html" class="drawer-link">🎓 Training Mode</a>
+        <a href="airports.html" class="drawer-link">🗺️ Airport Codes</a>
         <div class="drawer-link" onclick="openAbout()">ℹ️ <span id="menu-about">About This Site</span></div>
     </div>
     <div class="lang-switch">
@@ -403,7 +404,7 @@
     <div class="modal-content">
         <div class="modal-header" id="modal-title">About AeroUnitConverter</div>
         <div class="modal-body" id="modal-body">
-            AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion and gauge reading practice.
+            AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion, gauge reading practice, and global airport code training.
         </div>
         <button class="modal-close-btn" onclick="closeAbout()">OK</button>
     </div>
@@ -724,7 +725,7 @@
             resDrum: "55-gal Drum",
             menuAbout: "About This Site",
             aboutTitle: "About AeroUnitConverter",
-            aboutBody: "AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion and gauge reading practice.",
+            aboutBody: "AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion, gauge reading practice, and global airport code training.",
             disclaimer: "<strong>Disclaimer:</strong> This tool is provided for reference and educational purposes only. Always verify calculations against official manuals or documentation. The developer assumes no responsibility for any damages or losses resulting from the use of this tool."
         },
         jp: {
@@ -1021,100 +1022,4 @@
 
         document.getElementById('vol-qt').textContent = (l / 0.946352946).toFixed(3) + ' QT';
         document.getElementById('vol-pt').textContent = (l / 0.473176473).toFixed(3) + ' PT';
-        document.getElementById('vol-gal').textContent = gal.toFixed(3) + ' Gal';
-        document.getElementById('vol-drum').textContent = drum.toFixed(3) + ' Drum';
-        document.getElementById('vol-l').textContent = l.toFixed(3) + ' L';
-        document.getElementById('vol-ml').textContent = (l * 1000).toFixed(1) + ' mL';
-    }
-
-    function calcWeight() {
-        const val = parseFloat(document.getElementById('wtInput').value);
-        const unit = document.getElementById('wtUnit').value;
-
-        if (isNaN(val)) return;
-
-        let kg = 0;
-        if (unit === 'lbs') kg = val * 0.45359237;
-        else if (unit === 'kg') kg = val;
-
-        document.getElementById('wt-lbs').textContent = (kg / 0.45359237).toFixed(2) + ' lbs';
-        document.getElementById('wt-kg').textContent = kg.toFixed(2) + ' kg';
-    }
-
-    function calcTemp() {
-        const val = parseFloat(document.getElementById('tempInput').value);
-        const unit = document.getElementById('tempUnit').value;
-
-        if (isNaN(val)) return;
-
-        let c = 0;
-        if (unit === 'c') c = val;
-        else if (unit === 'f') c = (val - 32) * (5 / 9);
-        else if (unit === 'k') c = val - 273.15;
-
-        const f = (c * 9 / 5) + 32;
-        const k = c + 273.15;
-
-        document.getElementById('temp-c').textContent = c.toFixed(2) + ' °C';
-        document.getElementById('temp-f').textContent = f.toFixed(2) + ' °F';
-        document.getElementById('temp-k').textContent = k.toFixed(2) + ' K';
-    }
-
-    function calcSpeed() {
-        const val = parseFloat(document.getElementById('spdInput').value);
-        const unit = document.getElementById('spdUnit').value;
-
-        if (isNaN(val)) return;
-
-        let kmh = 0;
-        if (unit === 'kt') kmh = val * 1.852;
-        else if (unit === 'ms') kmh = val * 3.6;
-        else if (unit === 'kmh') kmh = val;
-        else if (unit === 'mph') kmh = val * 1.609344;
-
-        document.getElementById('spd-kt').textContent = (kmh / 1.852).toFixed(2) + ' kt';
-        document.getElementById('spd-ms').textContent = (kmh / 3.6).toFixed(2) + ' m/s';
-        document.getElementById('spd-kmh').textContent = kmh.toFixed(2) + ' km/h';
-        document.getElementById('spd-mph').textContent = (kmh / 1.609344).toFixed(2) + ' mph';
-    }
-
-    function calcSI() {
-        const val = parseFloat(document.getElementById('siInput').value);
-        const exp = parseInt(document.getElementById('siUnit').value);
-
-        if (isNaN(val)) return;
-
-        const baseVal = val * Math.pow(10, exp);
-
-        function formatNum(num) {
-            if (num === 0) return '0';
-            if (Math.abs(num) >= 1e6 || Math.abs(num) < 1e-4) {
-                return num.toExponential(4);
-            }
-            return Number(num.toFixed(6)).toString();
-        }
-
-        document.getElementById('si-G').textContent = formatNum(baseVal / 1e9);
-        document.getElementById('si-M').textContent = formatNum(baseVal / 1e6);
-        document.getElementById('si-k').textContent = formatNum(baseVal / 1e3);
-        document.getElementById('si-base').textContent = formatNum(baseVal);
-        document.getElementById('si-c').textContent = formatNum(baseVal / 1e-2);
-        document.getElementById('si-m').textContent = formatNum(baseVal / 1e-3);
-        document.getElementById('si-u').textContent = formatNum(baseVal / 1e-6);
-        document.getElementById('si-n').textContent = formatNum(baseVal / 1e-9);
-    }
-
-    calcLength();
-    calcArea();
-    calcDistance();
-    calcTorque();
-    calcPressure();
-    calcVolume();
-    calcWeight();
-    calcTemp();
-    calcSpeed();
-    calcSI();
-</script>
-
-</body>
-</html>
+        document.getElementById('vol-gal').textContent = gal.toFixed
