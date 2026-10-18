@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AUC Training - Vernier Caliper, Multimeter & Airport Codes</title>
+    <title>AUC Training - Vernier Caliper & Multimeter Trainer</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -229,14 +229,13 @@
             background: none;
             border: none;
             color: var(--text-sub);
-            padding: 10px 4px;
-            font-size: 0.8rem;
+            padding: 10px 0;
+            font-size: 0.85rem;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
-            white-space: nowrap;
         }
 
         .tab-btn.active {
@@ -294,7 +293,7 @@
             accent-color: var(--accent);
         }
 
-        input[type="text"], select {
+        select {
             padding: 10px;
             width: 100%;
             font-size: 0.95rem;
@@ -303,11 +302,10 @@
             border: 2px solid var(--border);
             border-radius: 8px;
             color: #fff;
-            box-sizing: border-box;
             outline: none;
         }
 
-        input[type="text"]:focus, select:focus {
+        select:focus {
             border-color: var(--accent);
         }
 
@@ -370,51 +368,21 @@
             margin-bottom: 8px;
         }
 
-        .quiz-question-box {
-            background: #090d16;
-            border: 2px solid var(--accent);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .quiz-q-title {
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            margin-bottom: 6px;
-        }
-
-        .quiz-q-main {
-            font-size: 1.35rem;
-            font-weight: bold;
-            color: var(--accent);
-            line-height: 1.3;
-        }
-
-        .quiz-q-sub {
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            margin-top: 4px;
-        }
-
         .quiz-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
-            margin-top: 8px;
+            margin-top: 10px;
         }
 
         .quiz-opt-btn {
             background: var(--input-bg);
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 12px 8px;
+            padding: 10px;
             border-radius: 8px;
             font-weight: bold;
-            font-size: 0.95rem;
             cursor: pointer;
-            text-align: center;
         }
 
         .quiz-opt-btn:active {
@@ -445,43 +413,6 @@
             border-color: var(--accent);
         }
 
-        /* 空港検索一覧テーブル */
-        .airport-list-container {
-            max-height: 320px;
-            overflow-y: auto;
-            overflow-x: auto;
-            background: #090d16;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        .airport-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
-            text-align: left;
-            white-space: nowrap;
-        }
-
-        .airport-table th {
-            background: #1e293b;
-            color: var(--accent);
-            padding: 8px 10px;
-            position: sticky;
-            top: 0;
-            z-index: 5;
-        }
-
-        .airport-table td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #1e293b;
-        }
-
-        .airport-table tr:hover {
-            background: #1e293b;
-        }
-
         footer {
             margin-top: 24px;
             margin-bottom: 12px;
@@ -504,6 +435,7 @@
     <div class="drawer-links">
         <a href="index.html" class="drawer-link">✈️ AeroUnitConverter</a>
         <a href="trainer.html" class="drawer-link" style="border: 1px solid var(--accent);">🎓 Training Mode</a>
+        <a href="airports.html" class="drawer-link">🗺️ Airport Codes</a>
         <div class="drawer-link" onclick="openAbout()">ℹ️ <span id="menu-about">About This Site</span></div>
     </div>
     <div class="lang-switch">
@@ -516,7 +448,7 @@
     <div class="modal-content">
         <div class="modal-header" id="modal-title">About AeroUnitConverter</div>
         <div class="modal-body" id="modal-body">
-            AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion and gauge reading practice.
+            AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion, gauge reading practice, and global airport code training.
         </div>
         <button class="modal-close-btn" onclick="closeAbout()">OK</button>
     </div>
@@ -526,7 +458,7 @@
     <header>
         <div class="header-title">
             <h1>🎓 AUC Trainer</h1>
-            <div class="subtitle" id="i18n-subtitle">Vernier Caliper, Multimeter & Airport Codes</div>
+            <div class="subtitle" id="i18n-subtitle">Vernier Caliper & Meter Reading Practice</div>
         </div>
         <button class="menu-btn" onclick="openMenu()">☰</button>
     </header>
@@ -534,7 +466,6 @@
     <div class="tabs">
         <button class="tab-btn active" id="tab-btn-caliper" onclick="switchTab(event, 'caliper')">1/128" Caliper</button>
         <button class="tab-btn" id="tab-btn-meter" onclick="switchTab(event, 'meter')">Analog Multimeter</button>
-        <button class="tab-btn" id="tab-btn-airport" onclick="switchTab(event, 'airport')">Airport Codes</button>
     </div>
 
     <div class="card">
@@ -619,58 +550,6 @@
                 <div id="meterQuizFeedback" style="text-align: center; margin-top: 10px; font-weight: bold; min-height: 24px;"></div>
             </div>
         </div>
-
-        <!-- 3. Airport Codes -->
-        <div id="tab-airport" class="tab-content">
-            <div class="mode-toggle">
-                <button class="mode-btn active" id="airport-mode-quiz" onclick="setAirportMode('quiz')">Quiz Mode</button>
-                <button class="mode-btn" id="airport-mode-search" onclick="setAirportMode('search')">Search & Table</button>
-            </div>
-
-            <!-- クイズモード -->
-            <div id="airport-quiz-view">
-                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                    <select id="airportQuizRegion" onchange="nextAirportQuiz()">
-                        <option value="all">Region: All Airports (世界・国内すべて)</option>
-                        <option value="japan" selected>Region: Japan (国内空港)</option>
-                        <option value="asia">Region: Asia (アジア)</option>
-                        <option value="namerica">Region: North America (北米)</option>
-                        <option value="europe">Region: Europe (欧州)</option>
-                        <option value="other">Region: Oceania / Mideast / Others (その他)</option>
-                    </select>
-                </div>
-
-                <div class="quiz-question-box">
-                    <div class="quiz-q-title" id="airport-q-title">What is the IATA / ICAO code for:</div>
-                    <div class="quiz-q-main" id="airport-q-main">-</div>
-                    <div class="quiz-q-sub" id="airport-q-sub">-</div>
-                </div>
-
-                <div class="quiz-options" id="airportQuizOptions"></div>
-                <div id="airportQuizFeedback" style="text-align: center; margin-top: 10px; font-weight: bold; min-height: 24px;"></div>
-                <button class="btn" onclick="nextAirportQuiz()" id="btn-next-airport-quiz">New Question</button>
-            </div>
-
-            <!-- 検索 & 早見表モード -->
-            <div id="airport-search-view" style="display: none;">
-                <input type="text" id="airportSearchInput" placeholder="Search by name, IATA, ICAO, city, country..." oninput="renderAirportTable()">
-                <div class="airport-list-container">
-                    <table class="airport-table">
-                        <thead>
-                            <tr>
-                                <th>IATA</th>
-                                <th>ICAO</th>
-                                <th id="th-airport-name">Airport</th>
-                                <th id="th-airport-city">City</th>
-                                <th id="th-airport-country">Country</th>
-                            </tr>
-                        </thead>
-                        <tbody id="airportTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <footer>
@@ -683,114 +562,13 @@
 <script>
     let currentLang = 'en';
 
-    // 全世界・国内主要空港データベース（国名・地名付き）
-    const airportData = [
-        // 日本 (Japan)
-        { iata: 'HND', icao: 'RJTT', nameEn: 'Haneda', nameJp: '羽田空港', cityEn: 'Tokyo', cityJp: '東京', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'NRT', icao: 'RJAA', nameEn: 'Narita', nameJp: '成田国際空港', cityEn: 'Tokyo / Narita', cityJp: '東京・成田', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'KIX', icao: 'RJBB', nameEn: 'Kansai', nameJp: '関西国際空港', cityEn: 'Osaka', cityJp: '大阪', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'ITM', icao: 'RJOO', nameEn: 'Itami (Osaka)', nameJp: '大阪国際空港（伊丹）', cityEn: 'Osaka / Hyogo', cityJp: '大阪・兵庫', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'NGO', icao: 'RJGG', nameEn: 'Chubu Centrair', nameJp: '中部国際空港', cityEn: 'Nagoya / Tokoname', cityJp: '名古屋・常滑', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'CTS', icao: 'RJCC', nameEn: 'New Chitose', nameJp: '新千歳空港', cityEn: 'Sapporo / Chitose', cityJp: '札幌・千歳', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'FUK', icao: 'RJFF', nameEn: 'Fukuoka', nameJp: '福岡空港', cityEn: 'Fukuoka', cityJp: '福岡', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'OKA', icao: 'ROAH', nameEn: 'Naha', nameJp: '那覇空港', cityEn: 'Okinawa / Naha', cityJp: '沖縄・那覇', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'SDJ', icao: 'RJSS', nameEn: 'Sendai', nameJp: '仙台空港', cityEn: 'Sendai / Natori', cityJp: '仙台・名取', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'HIJ', icao: 'RJOA', nameEn: 'Hiroshima', nameJp: '広島空港', cityEn: 'Hiroshima / Mihara', cityJp: '広島・三原', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'KOJ', icao: 'RJFK', nameEn: 'Kagoshima', nameJp: '鹿児島空港', cityEn: 'Kagoshima / Kirishima', cityJp: '鹿児島・霧島', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'KMJ', icao: 'RJFT', nameEn: 'Kumamoto', nameJp: '熊本空港', cityEn: 'Kumamoto / Mashiki', cityJp: '熊本・益城', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'NGS', icao: 'RJFU', nameEn: 'Nagasaki', nameJp: '長崎空港', cityEn: 'Nagasaki / Omura', cityJp: '長崎・大村', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'MYJ', icao: 'RJOM', nameEn: 'Matsuyama', nameJp: '松山空港', cityEn: 'Matsuyama', cityJp: '松山', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'TAK', icao: 'RJOT', nameEn: 'Takamatsu', nameJp: '高松空港', cityEn: 'Takamatsu', cityJp: '高松', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'KMQ', icao: 'RJNK', nameEn: 'Komatsu', nameJp: '小松空港', cityEn: 'Komatsu', cityJp: '小松', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'KMI', icao: 'RJFM', nameEn: 'Miyazaki', nameJp: '宮崎ブーゲンビリア空港', cityEn: 'Miyazaki', cityJp: '宮崎', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'HKD', icao: 'RJCH', nameEn: 'Hakodate', nameJp: '函館空港', cityEn: 'Hakodate', cityJp: '函館', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'AKJ', icao: 'RJEC', nameEn: 'Asahikawa', nameJp: '旭川空港', cityEn: 'Asahikawa', cityJp: '旭川', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'AOJ', icao: 'RJSA', nameEn: 'Aomori', nameJp: '青森空港', cityEn: 'Aomori', cityJp: '青森', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'UBJ', icao: 'RJDC', nameEn: 'Yamaguchi Ube', nameJp: '山口宇部空港', cityEn: 'Ube', cityJp: '宇部', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'TOY', icao: 'RJNT', nameEn: 'Toyama', nameJp: '富山空港', cityEn: 'Toyama', cityJp: '富山', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'FSZ', icao: 'RJNS', nameEn: 'Mt. Fuji Shizuoka', nameJp: '富士山静岡空港', cityEn: 'Makinohara', cityJp: '牧之原', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'KCZ', icao: 'RJOK', nameEn: 'Kochi Ryoma', nameJp: '高知龍馬空港', cityEn: 'Nankoku', cityJp: '南国', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'OIT', icao: 'RJFO', nameEn: 'Oita', nameJp: '大分空港', cityEn: 'Kunisaki', cityJp: '国東', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'ISG', icao: 'ROIG', nameEn: 'New Ishigaki', nameJp: '新石垣空港', cityEn: 'Ishigaki', cityJp: '石垣', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'MMY', icao: 'ROMY', nameEn: 'Miyako', nameJp: '宮古空港', cityEn: 'Miyakojima', cityJp: '宮古島', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'ASJ', icao: 'RKAJ', nameEn: 'Amami', nameJp: '奄美空港', cityEn: 'Amami', cityJp: '奄美', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'WKJ', icao: 'RJCW', nameEn: 'Wakkanai', nameJp: '稚内空港', cityEn: 'Wakkanai', cityJp: '稚内', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'MMB', icao: 'RJCM', nameEn: 'Memanbetsu', nameJp: '女満別空港', cityEn: 'Ozora', cityJp: '大空', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-        { iata: 'KUH', icao: 'RJCK', nameEn: 'Kushiro', nameJp: '釧路空港', cityEn: 'Kushiro', cityJp: '釧路', countryEn: 'Japan', countryJp: '日本', region: 'japan' },
-
-        // アジア (Asia)
-        { iata: 'ICN', icao: 'RKSI', nameEn: 'Incheon', nameJp: '仁川国際空港', cityEn: 'Seoul / Incheon', cityJp: 'ソウル・仁川', countryEn: 'South Korea', countryJp: '韓国', region: 'asia' },
-        { iata: 'GMP', icao: 'RKSS', nameEn: 'Gimpo', nameJp: '金浦国際空港', cityEn: 'Seoul', cityJp: 'ソウル', countryEn: 'South Korea', countryJp: '韓国', region: 'asia' },
-        { iata: 'PUS', icao: 'RKPK', nameEn: 'Gimhae', nameJp: '金海国際空港', cityEn: 'Busan', cityJp: '釜山', countryEn: 'South Korea', countryJp: '韓国', region: 'asia' },
-        { iata: 'TPE', icao: 'RCTP', nameEn: 'Taoyuan', nameJp: '台湾桃園国際空港', cityEn: 'Taipei / Taoyuan', cityJp: '台北・桃園', countryEn: 'Taiwan', countryJp: '台湾', region: 'asia' },
-        { iata: 'TSA', icao: 'RCSS', nameEn: 'Songshan', nameJp: '台北松山空港', cityEn: 'Taipei', cityJp: '台北', countryEn: 'Taiwan', countryJp: '台湾', region: 'asia' },
-        { iata: 'HKG', icao: 'VHHH', nameEn: 'Hong Kong Chek Lap Kok', nameJp: '香港国際空港', cityEn: 'Hong Kong', cityJp: '香港', countryEn: 'Hong Kong', countryJp: '香港', region: 'asia' },
-        { iata: 'MFM', icao: 'VMMC', nameEn: 'Macau', nameJp: 'マカオ国際空港', cityEn: 'Macau', cityJp: 'マカオ', countryEn: 'Macau', countryJp: 'マカオ', region: 'asia' },
-        { iata: 'PEK', icao: 'ZBAA', nameEn: 'Beijing Capital', nameJp: '北京首都国際空港', cityEn: 'Beijing', cityJp: '北京', countryEn: 'China', countryJp: '中国', region: 'asia' },
-        { iata: 'PKX', icao: 'ZBAD', nameEn: 'Beijing Daxing', nameJp: '北京大興国際空港', cityEn: 'Beijing', cityJp: '北京', countryEn: 'China', countryJp: '中国', region: 'asia' },
-        { iata: 'PVG', icao: 'ZSPD', nameEn: 'Shanghai Pudong', nameJp: '上海浦東国際空港', cityEn: 'Shanghai', cityJp: '上海', countryEn: 'China', countryJp: '中国', region: 'asia' },
-        { iata: 'SHA', icao: 'ZSSS', nameEn: 'Shanghai Hongqiao', nameJp: '上海虹橋国際空港', cityEn: 'Shanghai', cityJp: '上海', countryEn: 'China', countryJp: '中国', region: 'asia' },
-        { iata: 'CAN', icao: 'ZGGG', nameEn: 'Guangzhou Baiyun', nameJp: '広州白雲国際空港', cityEn: 'Guangzhou', cityJp: '広州', countryEn: 'China', countryJp: '中国', region: 'asia' },
-        { iata: 'BKK', icao: 'VTBS', nameEn: 'Suvarnabhumi', nameJp: 'スワンナプーム国際空港', cityEn: 'Bangkok', cityJp: 'バンコク', countryEn: 'Thailand', countryJp: 'タイ', region: 'asia' },
-        { iata: 'DMK', icao: 'VTBD', nameEn: 'Don Mueang', nameJp: 'ドンムアン空港', cityEn: 'Bangkok', cityJp: 'バンコク', countryEn: 'Thailand', countryJp: 'タイ', region: 'asia' },
-        { iata: 'SIN', icao: 'WSSS', nameEn: 'Changi', nameJp: 'シンガポール・チャンギ空港', cityEn: 'Singapore', cityJp: 'シンガポール', countryEn: 'Singapore', countryJp: 'シンガポール', region: 'asia' },
-        { iata: 'KUL', icao: 'WMKK', nameEn: 'Kuala Lumpur', nameJp: 'クアラルンプール国際空港', cityEn: 'Kuala Lumpur / Sepang', cityJp: 'クアラルンプール', countryEn: 'Malaysia', countryJp: 'マレーシア', region: 'asia' },
-        { iata: 'SGN', icao: 'VVTS', nameEn: 'Tan Son Nhat', nameJp: 'タンソンニャット国際空港', cityEn: 'Ho Chi Minh City', cityJp: 'ホーチミン', countryEn: 'Vietnam', countryJp: 'ベトナム', region: 'asia' },
-        { iata: 'HAN', icao: 'VVNB', nameEn: 'Noi Bai', nameJp: 'ノイバイ国際空港', cityEn: 'Hanoi', cityJp: 'ハノイ', countryEn: 'Vietnam', countryJp: 'ベトナム', region: 'asia' },
-        { iata: 'CGK', icao: 'WIII', nameEn: 'Soekarno-Hatta', nameJp: 'スカルノ・ハッタ国際空港', cityEn: 'Jakarta', cityJp: 'ジャカルタ', countryEn: 'Indonesia', countryJp: 'インドネシア', region: 'asia' },
-        { iata: 'DPS', icao: 'WADD', nameEn: 'Ngurah Rai (Bali)', nameJp: 'ングラ・ライ国際空港（バリ）', cityEn: 'Denpasar / Bali', cityJp: 'デンパサール・バリ', countryEn: 'Indonesia', countryJp: 'インドネシア', region: 'asia' },
-        { iata: 'MNL', icao: 'RPLL', nameEn: 'Ninoy Aquino', nameJp: 'ニノイ・アキノ国際空港', cityEn: 'Manila', cityJp: 'マニラ', countryEn: 'Philippines', countryJp: 'フィリピン', region: 'asia' },
-        { iata: 'DEL', icao: 'VIDP', nameEn: 'Indira Gandhi', nameJp: 'インディラ・ガンディー国際空港', cityEn: 'New Delhi', cityJp: 'ニューデリー', countryEn: 'India', countryJp: 'インド', region: 'asia' },
-
-        // 北米 (North America)
-        { iata: 'LAX', icao: 'KLAX', nameEn: 'Los Angeles', nameJp: 'ロサンゼルス国際空港', cityEn: 'Los Angeles, CA', cityJp: 'ロサンゼルス', countryEn: 'United States', countryJp: 'アメリカ', region: 'namerica' },
-        { iata: 'SFO', icao: 'KSFO', nameEn: 'San Francisco', nameJp: 'サンフランシスコ国際空港', cityEn: 'San Francisco, CA', cityJp: 'サンフランシスコ', countryEn: 'United States', countryJp: 'アメリカ', region: 'namerica' },
-        { iata: 'SEA', icao: 'KSEA', nameEn: 'Seattle-Tacoma', nameJp: 'シアトル・タコマ国際空港', cityEn: 'Seattle, WA', cityJp: 'シアトル', countryEn: 'United States', countryJp: 'アメリカ', region: 'namerica' },
-        { iata: 'JFK', icao: 'KJFK', nameEn: 'John F. Kennedy', nameJp: 'ジョン・F・ケネディ国際空港', cityEn: 'New York, NY', cityJp: 'ニューヨーク', countryEn: 'United States', countryJp: 'アメリカ', region: 'namerica' },
-        { iata: 'EWR', icao: 'KEWR', nameEn: 'Newark Liberty', nameJp: 'ニューアーク・リバティ国際空港', cityEn: 'Newark / New York, NJ', cityJp: 'ニューアーク', countryEn: 'United States', countryJp: 'アメリカ', region: 'namerica' },
-        { iata: 'ORD', icao: 'KORD', nameEn: 'O\'Hare', nameJp: 'シカゴ・オヘア国際空港', cityEn: 'Chicago, IL', cityJp: 'シカゴ', countryEn: 'United States', countryJp: 'アメリカ', region: 'namerica' },
-        { iata: 'DFW', icao: 'KDFW', nameEn: 'Dallas/Fort Worth', nameJp: 'ダラス・フォートワース国際空港', cityEn: 'Dallas, TX', cityJp: 'ダラス', countryEn: 'United States', countryJp: 'アメリカ', region: 'namerica' },
-        { iata: 'ATL', icao: 'KATL', nameEn: 'Hartsfield-Jackson', nameJp: 'ハーツフィールド・ジャクソン空港', cityEn: 'Atlanta, GA', cityJp: 'アトランタ', countryEn: 'United States', countryJp: 'アメリカ', region: 'namerica' },
-        { iata: 'HNL', icao: 'PHNL', nameEn: 'Daniel K. Inouye (Honolulu)', nameJp: 'ダニエル・K・イノウエ空港', cityEn: 'Honolulu, HI', cityJp: 'ホノルル', countryEn: 'United States', countryJp: 'アメリカ', region: 'namerica' },
-        { iata: 'ANC', icao: 'PANC', nameEn: 'Ted Stevens Anchorage', nameJp: 'テッド・スティーブンス空港', cityEn: 'Anchorage, AK', cityJp: 'アンカレッジ', countryEn: 'United States', countryJp: 'アメリカ', region: 'namerica' },
-        { iata: 'YVR', icao: 'CYVR', nameEn: 'Vancouver', nameJp: 'バンクーバー国際空港', cityEn: 'Vancouver, BC', cityJp: 'バンクーバー', countryEn: 'Canada', countryJp: 'カナダ', region: 'namerica' },
-        { iata: 'YYZ', icao: 'CYYZ', nameEn: 'Toronto Pearson', nameJp: 'トロント・ピアソン国際空港', cityEn: 'Toronto, ON', cityJp: 'トロント', countryEn: 'Canada', countryJp: 'カナダ', region: 'namerica' },
-        { iata: 'MEX', icao: 'MMMX', nameEn: 'Benito Juárez', nameJp: 'ベニート・フアレス国際空港', cityEn: 'Mexico City', cityJp: 'メキシコシティ', countryEn: 'Mexico', countryJp: 'メキシコ', region: 'namerica' },
-
-        // 欧州 (Europe)
-        { iata: 'LHR', icao: 'EGLL', nameEn: 'Heathrow', nameJp: 'ロンドン・ヒースロー空港', cityEn: 'London', cityJp: 'ロンドン', countryEn: 'United Kingdom', countryJp: 'イギリス', region: 'europe' },
-        { iata: 'CDG', icao: 'LFPG', nameEn: 'Charles de Gaulle', nameJp: 'シャルル・ド・ゴール空港', cityEn: 'Paris', cityJp: 'パリ', countryEn: 'France', countryJp: 'フランス', region: 'europe' },
-        { iata: 'FRA', icao: 'EDDF', nameEn: 'Frankfurt', nameJp: 'フランクフルト空港', cityEn: 'Frankfurt', cityJp: 'フランクフルト', countryEn: 'Germany', countryJp: 'ドイツ', region: 'europe' },
-        { iata: 'MUC', icao: 'EDDM', nameEn: 'Munich', nameJp: 'ミュンヘン空港', cityEn: 'Munich', cityJp: 'ミュンヘン', countryEn: 'Germany', countryJp: 'ドイツ', region: 'europe' },
-        { iata: 'AMS', icao: 'EHAM', nameEn: 'Schiphol', nameJp: 'アムステルダム・スキポール空港', cityEn: 'Amsterdam', cityJp: 'アムステルダム', countryEn: 'Netherlands', countryJp: 'オランダ', region: 'europe' },
-        { iata: 'MAD', icao: 'LEMD', nameEn: 'Adolfo Suárez Barajas', nameJp: 'アドルフォ・スアレス・バラハス空港', cityEn: 'Madrid', cityJp: 'マドリード', countryEn: 'Spain', countryJp: 'スペイン', region: 'europe' },
-        { iata: 'FCO', icao: 'LIRF', nameEn: 'Leonardo da Vinci-Fiumicino', nameJp: 'フィウミチーノ空港', cityEn: 'Rome', cityJp: 'ローマ', countryEn: 'Italy', countryJp: 'イタリア', region: 'europe' },
-        { iata: 'ZRH', icao: 'LSZH', nameEn: 'Zurich', nameJp: 'チューリッヒ空港', cityEn: 'Zurich', cityJp: 'チューリッヒ', countryEn: 'Switzerland', countryJp: 'スイス', region: 'europe' },
-        { iata: 'VIE', icao: 'LOWW', nameEn: 'Vienna', nameJp: 'ウィーン国際空港', cityEn: 'Vienna', cityJp: 'ウィーン', countryEn: 'Austria', countryJp: 'オーストリア', region: 'europe' },
-        { iata: 'CPH', icao: 'EKCH', nameEn: 'Copenhagen', nameJp: 'コペンハーゲン空港', cityEn: 'Copenhagen', cityJp: 'コペンハーゲン', countryEn: 'Denmark', countryJp: 'デンマーク', region: 'europe' },
-        { iata: 'HEL', icao: 'EFHK', nameEn: 'Helsinki-Vantaa', nameJp: 'ヘルシンキ・ヴァンター空港', cityEn: 'Helsinki', cityJp: 'ヘルシンキ', countryEn: 'Finland', countryJp: 'フィンランド', region: 'europe' },
-        { iata: 'IST', icao: 'LTFM', nameEn: 'Istanbul', nameJp: 'イスタンブール空港', cityEn: 'Istanbul', cityJp: 'イスタンブール', countryEn: 'Turkey', countryJp: 'トルコ', region: 'europe' },
-
-        // その他 (Oceania, Middle East, Latin America, Africa)
-        { iata: 'SYD', icao: 'YSSY', nameEn: 'Kingsford Smith', nameJp: 'シドニー国際空港', cityEn: 'Sydney, NSW', cityJp: 'シドニー', countryEn: 'Australia', countryJp: 'オーストラリア', region: 'other' },
-        { iata: 'MEL', icao: 'YMML', nameEn: 'Melbourne Tullamarine', nameJp: 'メルボルン空港', cityEn: 'Melbourne, VIC', cityJp: 'メルボルン', countryEn: 'Australia', countryJp: 'オーストラリア', region: 'other' },
-        { iata: 'AKL', icao: 'NZAA', nameEn: 'Auckland', nameJp: 'オークランド国際空港', cityEn: 'Auckland', cityJp: 'オークランド', countryEn: 'New Zealand', countryJp: 'ニュージーランド', region: 'other' },
-        { iata: 'GUM', icao: 'PGUM', nameEn: 'Antonio B. Won Pat (Guam)', nameJp: 'グアム国際空港', cityEn: 'Guam', cityJp: 'グアム', countryEn: 'Guam (USA)', countryJp: 'グアム（米領）', region: 'other' },
-        { iata: 'DXB', icao: 'OMDB', nameEn: 'Dubai', nameJp: 'ドバイ国際空港', cityEn: 'Dubai', cityJp: 'ドバイ', countryEn: 'United Arab Emirates', countryJp: 'アラブ首長国連邦', region: 'other' },
-        { iata: 'DOH', icao: 'OTHH', nameEn: 'Hamad', nameJp: 'ハマド国際空港', cityEn: 'Doha', cityJp: 'ドーハ', countryEn: 'Qatar', countryJp: 'カタール', region: 'other' },
-        { iata: 'GRU', icao: 'SBGR', nameEn: 'São Paulo/Guarulhos', nameJp: 'グアルーリョス国際空港', cityEn: 'São Paulo', cityJp: 'サンパウロ', countryEn: 'Brazil', countryJp: 'ブラジル', region: 'other' },
-        { iata: 'CAI', icao: 'HECA', nameEn: 'Cairo', nameJp: 'カイロ国際空港', cityEn: 'Cairo', cityJp: 'カイロ', countryEn: 'Egypt', countryJp: 'エジプト', region: 'other' }
-    ];
-
     const i18n = {
         en: {
-            subtitle: "Vernier Caliper, Multimeter & Airport Codes",
+            subtitle: "Vernier Caliper & Meter Reading Practice",
             tabCaliper: "1/128\" Caliper",
             tabMeter: "Analog Multimeter",
-            tabAirport: "Airport Codes",
             modePractice: "Practice Mode",
             modeQuiz: "Quiz Mode",
-            modeSearch: "Search & Table",
             slidePos: "Slide Position:",
             reading: "Reading:",
             breakdown: "Breakdown:",
@@ -801,23 +579,17 @@
             newQuestion: "New Question",
             correct: "✨ Correct!",
             wrong: "❌ Try Again!",
-            airportQTitle: "What is the IATA / ICAO code for:",
-            thAirportName: "Airport",
-            thAirportCity: "City",
-            thAirportCountry: "Country",
             menuAbout: "About This Site",
             aboutTitle: "About AeroUnitConverter",
-            aboutBody: "AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion and gauge reading practice.",
+            aboutBody: "AeroUnitConverter is a lightweight, offline-ready web application designed for aviation fans and engineering professionals. Features include unit conversion, gauge reading practice, and global airport code training.",
             disclaimer: "<strong>Disclaimer:</strong> This training tool is for reference and educational practice only. Always consult official aircraft/equipment maintenance manuals."
         },
         jp: {
-            subtitle: "ノギス・テスター・空港コード トレーニング",
+            subtitle: "バーニアノギス・アナログテスター 読み方トレーニング",
             tabCaliper: "1/128\" ノギス",
             tabMeter: "アナログテスター",
-            tabAirport: "空港コード",
             modePractice: "練習モード",
             modeQuiz: "クイズモード",
-            modeSearch: "検索・早見表",
             slidePos: "スライド位置:",
             reading: "測定値:",
             breakdown: "内訳:",
@@ -828,10 +600,6 @@
             newQuestion: "次の問題",
             correct: "正解です！✨",
             wrong: "不正解！もう一度考えよう❌",
-            airportQTitle: "次の空港の 3レター(IATA) / 4レター(ICAO) は？",
-            thAirportName: "空港名",
-            thAirportCity: "地名 / 都市",
-            thAirportCountry: "国",
             menuAbout: "このサイトについて",
             aboutTitle: "AeroUnitConverter について",
             aboutBody: "AeroUnitConverter は、航空ファンやエンジニア向けに開発された軽量・オフライン対応の単位換算ウェブツールです。各種単位換算をはじめ、実務で役立つトレーニング機能を備えています。",
@@ -867,14 +635,11 @@
         document.getElementById('i18n-subtitle').textContent = t.subtitle;
         document.getElementById('tab-btn-caliper').textContent = t.tabCaliper;
         document.getElementById('tab-btn-meter').textContent = t.tabMeter;
-        document.getElementById('tab-btn-airport').textContent = t.tabAirport;
         
         document.getElementById('caliper-mode-practice').textContent = t.modePractice;
         document.getElementById('caliper-mode-quiz').textContent = t.modeQuiz;
         document.getElementById('meter-mode-practice').textContent = t.modePractice;
         document.getElementById('meter-mode-quiz').textContent = t.modeQuiz;
-        document.getElementById('airport-mode-quiz').textContent = t.modeQuiz;
-        document.getElementById('airport-mode-search').textContent = t.modeSearch;
 
         document.getElementById('lbl-slide-position').textContent = t.slidePos;
         document.getElementById('lbl-reading').textContent = t.reading;
@@ -883,472 +648,4 @@
         document.getElementById('lbl-needle-pos').textContent = t.needlePos;
         document.getElementById('lbl-measured-val').textContent = t.measuredVal;
 
-        document.getElementById('btn-next-caliper-quiz').textContent = t.newQuestion;
-        document.getElementById('btn-next-meter-quiz2').textContent = t.newQuestion;
-        document.getElementById('btn-next-airport-quiz').textContent = t.newQuestion;
-
-        document.getElementById('airport-q-title').textContent = t.airportQTitle;
-        document.getElementById('th-airport-name').textContent = t.thAirportName;
-        document.getElementById('th-airport-city').textContent = t.thAirportCity;
-        document.getElementById('th-airport-country').textContent = t.thAirportCountry;
-
-        document.getElementById('menu-about').textContent = t.menuAbout;
-        document.getElementById('modal-title').textContent = t.aboutTitle;
-        document.getElementById('modal-body').textContent = t.aboutBody;
-
-        document.getElementById('i18n-disclaimer').innerHTML = t.disclaimer;
-
-        if (meterMode === 'quiz') {
-            const selectEl = document.getElementById('meterRangeSelect');
-            const rangeText = selectEl.options[selectEl.selectedIndex].text;
-            document.getElementById('quiz-range-display').innerHTML = `<span>${i18n[currentLang].currentRange}</span> <span style="font-size:1.2rem; margin-left:8px;">${rangeText}</span>`;
-        }
-
-        drawCaliper();
-        drawMeter();
-        renderAirportTable();
-    }
-
-    function switchTab(evt, tabName) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        
-        evt.target.classList.add('active');
-        document.getElementById('tab-' + tabName).classList.add('active');
-
-        if(tabName === 'caliper') drawCaliper();
-        if(tabName === 'meter') drawMeter();
-        if(tabName === 'airport') renderAirportTable();
-    }
-
-    function gcd(a, b) {
-        return b === 0 ? a : gcd(b, a % b);
-    }
-
-    // ==========================================
-    // 1. Vernier Caliper Logic & Canvas
-    // ==========================================
-    let caliperMode = 'practice';
-    let currentCaliperQuizVal = 0;
-
-    function setCaliperMode(mode) {
-        caliperMode = mode;
-        document.getElementById('caliper-mode-practice').classList.toggle('active', mode === 'practice');
-        document.getElementById('caliper-mode-quiz').classList.toggle('active', mode === 'quiz');
-        
-        document.getElementById('caliper-practice-controls').style.display = mode === 'practice' ? 'flex' : 'none';
-        document.getElementById('caliper-quiz-controls').style.display = mode === 'quiz' ? 'flex' : 'none';
-
-        if (mode === 'quiz') nextCaliperQuiz();
-        else drawCaliper();
-    }
-
-    function getFractionText(val128) {
-        if (val128 === 0) return '0 in';
-        const whole = Math.floor(val128 / 128);
-        const rem = val128 % 128;
-
-        if (rem === 0) return `${whole} in`;
-
-        const g = gcd(rem, 128);
-        const num = rem / g;
-        const den = 128 / g;
-
-        return whole > 0 ? `${whole} ${num}/${den} in` : `${num}/${den} in`;
-    }
-
-    function drawCaliper() {
-        const canvas = document.getElementById('caliperCanvas');
-        const ctx = canvas.getContext('2d');
-        const steps = caliperMode === 'quiz' ? currentCaliperQuizVal : parseInt(document.getElementById('caliperRange').value);
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = "#e2e8f0";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        const startX = 30;
-        const mainScaleY = 50;
-        const ppx = 2.4;
-
-        ctx.strokeStyle = "#0f172a";
-        ctx.fillStyle = "#0f172a";
-        ctx.lineWidth = 1.5;
-        ctx.font = "10px sans-serif";
-
-        for (let i = 0; i <= 16; i++) {
-            const x = startX + (i * 8) * ppx;
-            const isInch = i % 16 === 0;
-            const isHalf = i % 8 === 0;
-            const isQuarter = i % 4 === 0;
-
-            let h = 12;
-            if (isInch) h = 25;
-            else if (isHalf) h = 20;
-            else if (isQuarter) h = 16;
-
-            ctx.beginPath();
-            ctx.moveTo(x, mainScaleY);
-            ctx.lineTo(x, mainScaleY - h);
-            ctx.stroke();
-
-            if (i % 4 === 0) {
-                const label = i === 0 ? "0" : (i === 16 ? "1\"" : `${i/4}/4`);
-                ctx.fillText(label, x - 6, mainScaleY - h - 4);
-            }
-        }
-
-        const vernierX = startX + steps * ppx;
-        const vernierY = mainScaleY;
-
-        ctx.fillStyle = "#cbd5e1";
-        ctx.fillRect(vernierX - 10, vernierY, 8 * 7 * ppx + 20, 60);
-        ctx.strokeRect(vernierX - 10, vernierY, 8 * 7 * ppx + 20, 60);
-
-        ctx.fillStyle = "#0284c7";
-        ctx.strokeStyle = "#0284c7";
-        ctx.lineWidth = 1.5;
-
-        const mainStep16 = Math.floor(steps / 8);
-        const vernierMatch = steps % 8;
-
-        for (let j = 0; j <= 8; j++) {
-            const vx = vernierX + (j * 7) * ppx;
-            ctx.beginPath();
-            ctx.moveTo(vx, vernierY);
-            ctx.lineTo(vx, vernierY + 18);
-            ctx.stroke();
-
-            ctx.fillText(j.toString(), vx - 3, vernierY + 32);
-        }
-
-        const mainPart = `${mainStep16}/16"`;
-        const vernierPart = `${vernierMatch}/128"`;
-        const totalFrac = getFractionText(steps);
-
-        document.getElementById('caliperReading').textContent = totalFrac;
-        document.getElementById('caliperBreakdown').textContent = `${mainPart} + ${vernierPart}`;
-    }
-
-    function nextCaliperQuiz() {
-        currentCaliperQuizVal = Math.floor(Math.random() * 96) + 8;
-        drawCaliper();
-
-        document.getElementById('caliperQuizFeedback').textContent = "";
-        const optionsContainer = document.getElementById('caliperQuizOptions');
-        optionsContainer.innerHTML = "";
-
-        const correctAns = getFractionText(currentCaliperQuizVal);
-        let choices = [correctAns];
-
-        while (choices.length < 4) {
-            let dummyVal = currentCaliperQuizVal + (Math.floor(Math.random() * 7) - 3) * 2;
-            if (dummyVal < 0) dummyVal = 4;
-            let dummyAns = getFractionText(dummyVal);
-            if (!choices.includes(dummyAns)) choices.push(dummyAns);
-        }
-
-        choices.sort(() => Math.random() - 0.5);
-
-        choices.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'quiz-opt-btn';
-            btn.textContent = opt;
-            btn.onclick = () => {
-                const fb = document.getElementById('caliperQuizFeedback');
-                if (opt === correctAns) {
-                    fb.textContent = i18n[currentLang].correct;
-                    fb.style.color = "var(--accent-green)";
-                } else {
-                    fb.textContent = i18n[currentLang].wrong;
-                    fb.style.color = "#f87171";
-                }
-            };
-            optionsContainer.appendChild(btn);
-        });
-    }
-
-    // ==========================================
-    // 2. Multimeter Canvas Logic
-    // ==========================================
-    let meterMode = 'practice';
-    let currentMeterQuizPos = 50;
-    let currentMeterQuizRange = 'DCV_10';
-
-    function setMeterMode(mode) {
-        meterMode = mode;
-        document.getElementById('meter-mode-practice').classList.toggle('active', mode === 'practice');
-        document.getElementById('meter-mode-quiz').classList.toggle('active', mode === 'quiz');
-
-        document.getElementById('meter-practice-controls').style.display = mode === 'practice' ? 'block' : 'none';
-        document.getElementById('meter-quiz-controls').style.display = mode === 'quiz' ? 'flex' : 'none';
-        document.getElementById('quiz-range-display-container').style.display = mode === 'quiz' ? 'block' : 'none';
-
-        if (mode === 'quiz') nextMeterQuiz();
-        else drawMeter();
-    }
-
-    function calculateMeterValue(posPercent, rangeKey) {
-        if (rangeKey.startsWith('DCV_')) {
-            const maxVal = parseFloat(rangeKey.replace('DCV_', ''));
-            return (posPercent / 100 * maxVal).toFixed(2) + " V";
-        } else if (rangeKey.startsWith('OHM_')) {
-            const mult = rangeKey === 'OHM_x1' ? 1 : (rangeKey === 'OHM_x10' ? 10 : 1000);
-            if (posPercent > 98) return "0 Ω";
-            if (posPercent < 2) return "∞ Ω";
-
-            const rawOhm = Math.pow((100 - posPercent) / 10, 2.2);
-            const val = Math.round(rawOhm * mult);
-            return val >= 1000 ? (val / 1000).toFixed(1) + " kΩ" : val + " Ω";
-        }
-        return "-";
-    }
-
-    function drawMeter() {
-        const canvas = document.getElementById('meterCanvas');
-        const ctx = canvas.getContext('2d');
-        const pos = meterMode === 'quiz' ? currentMeterQuizPos : parseInt(document.getElementById('meterRange').value);
-        const range = meterMode === 'quiz' ? currentMeterQuizRange : document.getElementById('meterRangeSelect').value;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        const cx = canvas.width / 2;
-        const cy = 250;
-        const rTop = 200;
-
-        ctx.strokeStyle = "#16a34a";
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.arc(cx, cy, rTop, Math.PI * 1.22, Math.PI * 1.78);
-        ctx.stroke();
-
-        ctx.font = "bold 9px sans-serif";
-        ctx.fillStyle = "#16a34a";
-
-        const ohmNodes = [
-            {val: "∞", p: 0}, {val: "2k", p: 10}, {val: "1k", p: 20}, {val: "500", p: 30},
-            {val: "200", p: 40}, {val: "100", p: 50}, {val: "50", p: 62}, {val: "20", p: 75},
-            {val: "10", p: 85}, {val: "5", p: 92}, {val: "0", p: 100}
-        ];
-
-        ohmNodes.forEach(node => {
-            const ang = Math.PI * 1.22 + (node.p / 100) * (Math.PI * 0.56);
-            const x1 = cx + Math.cos(ang) * rTop;
-            const y1 = cy + Math.sin(ang) * rTop;
-            const x2 = cx + Math.cos(ang) * (rTop - 8);
-            const y2 = cy + Math.sin(ang) * (rTop - 8);
-
-            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
-
-            const lx = cx + Math.cos(ang) * (rTop - 18);
-            const ly = cy + Math.sin(ang) * (rTop - 18);
-            ctx.fillText(node.val, lx - 6, ly + 3);
-        });
-        ctx.fillText("OHM (Ω)", cx - 20, cy - rTop + 32);
-
-        const rDCV = 165;
-        ctx.strokeStyle = "#0f172a";
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.arc(cx, cy, rDCV, Math.PI * 1.23, Math.PI * 1.77);
-        ctx.stroke();
-
-        ctx.fillStyle = "#0f172a";
-        ctx.font = "9px sans-serif";
-
-        for (let i = 0; i <= 10; i++) {
-            const p = i / 10;
-            const ang = Math.PI * 1.23 + p * (Math.PI * 0.54);
-            const x1 = cx + Math.cos(ang) * rDCV;
-            const y1 = cy + Math.sin(ang) * rDCV;
-            const x2 = cx + Math.cos(ang) * (rDCV - 6);
-            const y2 = cy + Math.sin(ang) * (rDCV - 6);
-
-            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
-
-            const v250 = Math.round(p * 250);
-            const v50 = Math.round(p * 50);
-            const v10 = Math.round(p * 10);
-
-            const lx = cx + Math.cos(ang) * (rDCV - 14);
-            const ly = cy + Math.sin(ang) * (rDCV - 14);
-
-            if (i % 2 === 0) {
-                ctx.fillText(`${v250}`, lx - 8, ly + 2);
-                ctx.fillText(`${v50}`, lx - 6, ly + 11);
-                ctx.fillText(`${v10}`, lx - 4, ly + 20);
-            }
-        }
-
-        ctx.fillText("DCV / ACV", 35, 120);
-
-        const needleAng = Math.PI * 1.23 + (pos / 100) * (Math.PI * 0.54);
-        const nx = cx + Math.cos(needleAng) * (rTop + 10);
-        const ny = cy + Math.sin(needleAng) * (rTop + 10);
-
-        ctx.strokeStyle = "rgba(0,0,0,0.15)";
-        ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.moveTo(cx + 3, cy); ctx.lineTo(nx + 3, ny); ctx.stroke();
-
-        ctx.strokeStyle = "#ef4444";
-        ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(nx, ny); ctx.stroke();
-
-        ctx.fillStyle = "#1e293b";
-        ctx.beginPath(); ctx.arc(cx, cy, 10, 0, Math.PI * 2); ctx.fill();
-
-        if (meterMode === 'practice') {
-            document.getElementById('meterReading').textContent = calculateMeterValue(pos, range);
-        }
-    }
-
-    function nextMeterQuiz() {
-        currentMeterQuizPos = Math.floor(Math.random() * 80) + 10;
-        const ranges = ['DCV_2.5', 'DCV_10', 'DCV_50', 'DCV_250', 'OHM_x1', 'OHM_x10', 'OHM_x1k'];
-        currentMeterQuizRange = ranges[Math.floor(Math.random() * ranges.length)];
-
-        const selectEl = document.getElementById('meterRangeSelect');
-        selectEl.value = currentMeterQuizRange;
-        
-        const rangeText = selectEl.options[selectEl.selectedIndex].text;
-        document.getElementById('quiz-range-display').innerHTML = `<span>${i18n[currentLang].currentRange}</span> <span style="font-size:1.2rem; margin-left:8px;">${rangeText}</span>`;
-
-        drawMeter();
-
-        document.getElementById('meterQuizFeedback').textContent = "";
-        const optionsContainer = document.getElementById('meterQuizOptions');
-        optionsContainer.innerHTML = "";
-
-        const correctAns = calculateMeterValue(currentMeterQuizPos, currentMeterQuizRange);
-        let choices = [correctAns];
-
-        while (choices.length < 4) {
-            let dummyPos = currentMeterQuizPos + (Math.floor(Math.random() * 5) - 2) * 10;
-            if (dummyPos < 5) dummyPos = 15;
-            let dummyAns = calculateMeterValue(dummyPos, currentMeterQuizRange);
-            if (!choices.includes(dummyAns)) choices.push(dummyAns);
-        }
-
-        choices.sort(() => Math.random() - 0.5);
-
-        choices.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'quiz-opt-btn';
-            btn.textContent = opt;
-            btn.onclick = () => {
-                const fb = document.getElementById('meterQuizFeedback');
-                if (opt === correctAns) {
-                    fb.textContent = i18n[currentLang].correct;
-                    fb.style.color = "var(--accent-green)";
-                } else {
-                    fb.textContent = i18n[currentLang].wrong;
-                    fb.style.color = "#f87171";
-                }
-            };
-            optionsContainer.appendChild(btn);
-        });
-    }
-
-    // ==========================================
-    // 3. Airport Codes Logic
-    // ==========================================
-    let airportMode = 'quiz';
-
-    function setAirportMode(mode) {
-        airportMode = mode;
-        document.getElementById('airport-mode-quiz').classList.toggle('active', mode === 'quiz');
-        document.getElementById('airport-mode-search').classList.toggle('active', mode === 'search');
-
-        document.getElementById('airport-quiz-view').style.display = mode === 'quiz' ? 'block' : 'none';
-        document.getElementById('airport-search-view').style.display = mode === 'search' ? 'block' : 'none';
-
-        if (mode === 'quiz') nextAirportQuiz();
-        else renderAirportTable();
-    }
-
-    function getFilteredAirports() {
-        const region = document.getElementById('airportQuizRegion').value;
-        if (region === 'all') return airportData;
-        return airportData.filter(a => a.region === region);
-    }
-
-    function nextAirportQuiz() {
-        const pool = getFilteredAirports();
-        const target = pool[Math.floor(Math.random() * pool.length)];
-
-        const airportName = currentLang === 'jp' ? target.nameJp : target.nameEn;
-        const city = currentLang === 'jp' ? target.cityJp : target.cityEn;
-        const country = currentLang === 'jp' ? target.countryJp : target.countryEn;
-
-        document.getElementById('airport-q-main').textContent = airportName;
-        document.getElementById('airport-q-sub').textContent = `📍 ${city}, ${country}`;
-        document.getElementById('airportQuizFeedback').textContent = "";
-
-        const optionsContainer = document.getElementById('airportQuizOptions');
-        optionsContainer.innerHTML = "";
-
-        const correctCode = `${target.iata} / ${target.icao}`;
-        let choices = [target];
-
-        while (choices.length < 4) {
-            const randItem = pool[Math.floor(Math.random() * pool.length)];
-            if (!choices.some(c => c.iata === randItem.iata)) {
-                choices.push(randItem);
-            }
-        }
-
-        choices.sort(() => Math.random() - 0.5);
-
-        choices.forEach(item => {
-            const codeStr = `${item.iata} / ${item.icao}`;
-            const btn = document.createElement('button');
-            btn.className = 'quiz-opt-btn';
-            btn.textContent = codeStr;
-            btn.onclick = () => {
-                const fb = document.getElementById('airportQuizFeedback');
-                if (codeStr === correctCode) {
-                    fb.textContent = i18n[currentLang].correct;
-                    fb.style.color = "var(--accent-green)";
-                } else {
-                    fb.textContent = `${i18n[currentLang].wrong} (Answer: ${correctCode})`;
-                    fb.style.color = "#f87171";
-                }
-            };
-            optionsContainer.appendChild(btn);
-        });
-    }
-
-    function renderAirportTable() {
-        const filter = (document.getElementById('airportSearchInput')?.value || '').toLowerCase();
-        const tbody = document.getElementById('airportTableBody');
-        tbody.innerHTML = '';
-
-        airportData.forEach(item => {
-            const name = currentLang === 'jp' ? item.nameJp : item.nameEn;
-            const city = currentLang === 'jp' ? item.cityJp : item.cityEn;
-            const country = currentLang === 'jp' ? item.countryJp : item.countryEn;
-
-            const fullSearchStr = `${item.iata} ${item.icao} ${item.nameEn} ${item.nameJp} ${item.cityEn} ${item.cityJp} ${item.countryEn} ${item.countryJp}`.toLowerCase();
-
-            if (!filter || fullSearchStr.includes(filter)) {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td style="font-weight: bold; color: var(--accent);">${item.iata}</td>
-                    <td style="color: var(--accent-green);">${item.icao}</td>
-                    <td>${name}</td>
-                    <td>${city}</td>
-                    <td style="color: var(--text-sub);">${country}</td>
-                `;
-                tbody.appendChild(row);
-            }
-        });
-    }
-
-    // Init
-    drawCaliper();
-    drawMeter();
-    nextAirportQuiz();
-</script>
-
-</body>
-</html>
+        document.getElementById('btn-next-caliper-quiz').textContent
